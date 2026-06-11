@@ -398,6 +398,26 @@ border-radius: ${borderRadius}px;`
               </div>
             </div>
 
+            {/* Canvas Theme Selector */}
+            <div className="flex items-center space-x-2">
+              <span className="text-[10px] uppercase tracking-wider text-white/40 font-semibold">Theme:</span>
+              <div className="flex bg-black/45 border border-white/10 rounded-lg p-0.5 text-[10px]">
+                {(['aurora', 'sunset', 'ocean', 'cyberpunk'] as const).map((style) => (
+                  <button
+                    key={style}
+                    onClick={() => setBgStyle(style)}
+                    className={`px-2.5 py-1 rounded-md font-bold uppercase transition-all ${
+                      bgStyle === style
+                        ? 'bg-white/10 text-white'
+                        : 'text-white/40 hover:text-white/80'
+                    }`}
+                  >
+                    {style}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Layout Dock Positioner */}
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
@@ -432,22 +452,6 @@ border-radius: ${borderRadius}px;`
 
           {/* Canvas visual zone */}
           <div className="flex-1 bg-[#121212] relative overflow-hidden flex flex-col items-center justify-center p-8 border-b border-white/10 select-none">
-            {/* Background selection badges */}
-            <div className="absolute top-4 left-4 z-10 flex space-x-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg p-1">
-              {(['aurora', 'sunset', 'ocean', 'cyberpunk'] as const).map((style) => (
-                <button
-                  key={style}
-                  onClick={() => setBgStyle(style)}
-                  className={`px-3 py-1 rounded text-[10px] font-bold tracking-wider uppercase transition-all ${
-                    bgStyle === style
-                      ? 'bg-white/15 text-white'
-                      : 'text-white/40 hover:text-white/80'
-                  }`}
-                >
-                  {style}
-                </button>
-              ))}
-            </div>
 
             {/* Vibrant Background Canvas layer */}
             <div className="absolute inset-0 z-0 pointer-events-none">
