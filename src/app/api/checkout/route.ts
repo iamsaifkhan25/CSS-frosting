@@ -26,7 +26,8 @@ export async function POST(req: Request) {
       .single()
 
     if (dbError || !product) {
-      return NextResponse.json({ error: 'Product not found.' }, { status: 404 })
+      console.error('[CHECKOUT_PRODUCT_QUERY_FAILED]:', dbError)
+      return NextResponse.json({ error: `Product not found. Database error: ${dbError?.message || 'Record not found'}` }, { status: 404 })
     }
 
     // Check if already purchased
