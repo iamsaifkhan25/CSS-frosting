@@ -398,6 +398,47 @@ border-radius: ${borderRadius}px;`
               </div>
             </div>
 
+            {/* Freeform Resizer (only if free viewport is selected) */}
+            {previewSize === 'free' && (
+              <div className="flex items-center space-x-3 bg-black/45 border border-white/10 rounded-lg px-2.5 py-1 text-[10px]">
+                <div className="flex items-center space-x-1">
+                  <span className="text-white/40 font-mono">W:</span>
+                  <input
+                    type="range"
+                    min="280"
+                    max="800"
+                    value={freeWidth}
+                    onChange={(e) => setFreeWidth(Number(e.target.value))}
+                    className="w-16 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+                  />
+                  <input
+                    type="number"
+                    value={freeWidth}
+                    onChange={(e) => setFreeWidth(Math.max(280, Math.min(800, Number(e.target.value))))}
+                    className="w-10 bg-white/5 border border-white/10 rounded px-1 text-center font-mono text-[9px] focus:outline-none"
+                  />
+                </div>
+                <span className="text-white/20">|</span>
+                <div className="flex items-center space-x-1">
+                  <span className="text-white/40 font-mono">H:</span>
+                  <input
+                    type="range"
+                    min="200"
+                    max="600"
+                    value={freeHeight}
+                    onChange={(e) => setFreeHeight(Number(e.target.value))}
+                    className="w-16 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+                  />
+                  <input
+                    type="number"
+                    value={freeHeight}
+                    onChange={(e) => setFreeHeight(Math.max(200, Math.min(600, Number(e.target.value))))}
+                    className="w-10 bg-white/5 border border-white/10 rounded px-1 text-center font-mono text-[9px] focus:outline-none"
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Canvas Theme Selector */}
             <div className="flex items-center space-x-2">
               <span className="text-[10px] uppercase tracking-wider text-white/40 font-semibold">Theme:</span>
@@ -485,7 +526,9 @@ border-radius: ${borderRadius}px;`
               style={{
                 width: `${currentDimensions.width}px`,
                 height: `${currentDimensions.height}px`,
-                transition: previewSize === 'free' ? 'none' : 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)'
+                transition: previewSize === 'free' ? 'none' : 'width 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
+                willChange: 'width, height',
+                transform: 'translate3d(0, 0, 0)'
               }}
               className="z-10 border border-dashed border-white/20 rounded-2xl relative flex items-center justify-center p-6 bg-black/10 shadow-[0_0_50px_rgba(0,0,0,0.4)]"
             >
@@ -546,7 +589,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'credit-card' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-sm aspect-[1.6] p-6 relative flex flex-col justify-between transition-all border select-text z-0"
+                      className="w-full max-w-sm aspect-[1.6] p-6 relative flex flex-col justify-between transition-[background-color,border-color,box-shadow] duration-300 border select-text z-0"
                     >
                       {/* Top section */}
                       <div className="flex justify-between items-start">
@@ -595,7 +638,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'login-modal' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-[280px] p-5 flex flex-col space-y-4 transition-all border select-text z-0"
+                      className="w-full max-w-[280px] p-5 flex flex-col space-y-4 transition-[background-color,border-color,box-shadow] duration-300 border select-text z-0"
                     >
                       <div className="space-y-1 text-center">
                         <input
@@ -647,7 +690,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'dashboard-sidebar' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-[220px] h-[260px] p-4 flex flex-col justify-between transition-all border select-text z-0"
+                      className="w-full max-w-[220px] h-[260px] p-4 flex flex-col justify-between transition-[background-color,border-color,box-shadow] duration-300 border select-text z-0"
                     >
                       <div className="space-y-5">
                         <div className="flex items-center space-x-2 px-1">
@@ -690,7 +733,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'glass-premium-card' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-sm aspect-[1.6] p-6 relative flex flex-col justify-between transition-all border border-white/20"
+                      className="w-full max-w-sm aspect-[1.6] p-6 relative flex flex-col justify-between transition-[background-color,border-color,box-shadow] duration-300 border border-white/20"
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 rounded-2xl pointer-events-none"></div>
                       
@@ -727,7 +770,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'glass-premium-modal' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-[260px] p-5 flex flex-col space-y-3.5 transition-all border"
+                      className="w-full max-w-[260px] p-5 flex flex-col space-y-3.5 transition-[background-color,border-color,box-shadow] duration-300 border"
                     >
                       <div className="flex justify-between items-center">
                         <div className="flex items-center space-x-1.5">
@@ -772,46 +815,7 @@ border-radius: ${borderRadius}px;`
               )}
             </div>
 
-            {/* Viewport Resizer Handles (Only visible when Free size is active) */}
-            {previewSize === 'free' && (
-              <div className="absolute bottom-6 flex items-center justify-center space-x-6 z-10 bg-black/75 border border-white/10 rounded-full px-4 py-2 text-xs backdrop-blur-md shadow-md">
-                <div className="flex items-center space-x-2">
-                  <span className="text-white/40 font-mono">W:</span>
-                  <input
-                    type="range"
-                    min="280"
-                    max="800"
-                    value={freeWidth}
-                    onChange={(e) => setFreeWidth(Number(e.target.value))}
-                    className="w-24 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
-                  />
-                  <input
-                    type="number"
-                    value={freeWidth}
-                    onChange={(e) => setFreeWidth(Math.max(280, Math.min(800, Number(e.target.value))))}
-                    className="w-12 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-center text-[10px] font-mono focus:outline-none focus:border-white/20"
-                  />
-                </div>
-                <div className="h-4 border-l border-white/10"></div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-white/40 font-mono">H:</span>
-                  <input
-                    type="range"
-                    min="200"
-                    max="600"
-                    value={freeHeight}
-                    onChange={(e) => setFreeHeight(Number(e.target.value))}
-                    className="w-24 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
-                  />
-                  <input
-                    type="number"
-                    value={freeHeight}
-                    onChange={(e) => setFreeHeight(Math.max(200, Math.min(600, Number(e.target.value))))}
-                    className="w-12 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-center text-[10px] font-mono focus:outline-none focus:border-white/20"
-                  />
-                </div>
-              </div>
-            )}
+            {/* Viewport size controls relocated to sub-header */}
           </div>
 
           {/* Bottom Code Exporter Panel */}
