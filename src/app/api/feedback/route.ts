@@ -22,19 +22,27 @@ export async function POST(request: Request) {
       )
     }
 
+    const requestUrl = new URL(request.url)
+    const referer = request.headers.get('referer') || requestUrl.origin
+
     // 2. Submit data to FormSubmit AJAX endpoint
     // FormSubmit does not require API keys, making it a perfect zero-config solution.
+    // We explicitly supply Referer, User-Agent, and _url to prevent FormSubmit from blocking
+    // the serverless backend fetch request with "pages browsed as HTML files" errors.
     const response = await fetch('https://formsubmit.co/ajax/harukiwaves@zohomail.in', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        'Referer': referer,
+        'User-Agent': request.headers.get('user-agent') || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       },
       body: JSON.stringify({
         name: name,
         email: email,
         message: `Feedback from CSS Frosting website:\n\nSender: ${name} (${email})\nSource: ${pageSource || 'Unknown'}\n\nMessage:\n${message}`,
         _subject: `[CSS Frosting Feedback] Message from ${name}`,
+        _url: referer,
       }),
     })
 
@@ -57,7 +65,7 @@ export async function POST(request: Request) {
       },
       { status: 200 }
     )
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('FormSubmit API error:', error)
     return NextResponse.json(
       { error: 'Failed to process feedback submission. Please try again later.' },
