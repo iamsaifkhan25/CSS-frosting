@@ -44,6 +44,10 @@ export default function Generator() {
   const [shadowColor, setShadowColor] = useState('#000000')
   const [noiseOpacity, setNoiseOpacity] = useState(4) // Frosted noise
 
+  // Refs for custom color pickers
+  const tintColorInputRef = useRef<HTMLInputElement>(null)
+  const shadowColorInputRef = useRef<HTMLInputElement>(null)
+
   // Selected component
   const [selectedComp, setSelectedComp] = useState<string>('credit-card')
   const [premiumCss, setPremiumCss] = useState<string | null>(null)
@@ -1166,11 +1170,19 @@ border-radius: ${borderRadius}px;`
               <span className="text-white/50 font-mono uppercase">{tintColor}</span>
             </div>
             <div className="flex space-x-3 items-center">
+              <button
+                type="button"
+                onClick={() => tintColorInputRef.current?.click()}
+                className="w-9 h-7 rounded border border-white/15 cursor-pointer flex-shrink-0 transition-transform active:scale-95 shadow-inner"
+                style={{ backgroundColor: tintColor }}
+                title="Select Custom Tint Color"
+              />
               <input
+                ref={tintColorInputRef}
                 type="color"
                 value={tintColor}
                 onChange={(e) => setTintColor(e.target.value)}
-                className="w-9 h-7 rounded border border-white/15 bg-transparent cursor-pointer overflow-hidden p-0"
+                className="sr-only"
               />
               <div className="flex-1 flex gap-1.5 items-center overflow-x-auto">
                 {['#ffffff', '#3b82f6', '#ec4899', '#10b981', '#f59e0b', '#8b5cf6'].map((color) => (
@@ -1324,11 +1336,19 @@ border-radius: ${borderRadius}px;`
                 <span className="text-white/50 font-mono uppercase">{shadowColor}</span>
               </div>
               <div className="flex space-x-2 items-center">
+                <button
+                  type="button"
+                  onClick={() => shadowColorInputRef.current?.click()}
+                  className="w-7 h-7 rounded border border-white/15 cursor-pointer flex-shrink-0 transition-transform active:scale-95 shadow-inner"
+                  style={{ backgroundColor: shadowColor }}
+                  title="Select Custom Shadow Color"
+                />
                 <input
+                  ref={shadowColorInputRef}
                   type="color"
                   value={shadowColor}
                   onChange={(e) => setShadowColor(e.target.value)}
-                  className="w-7 h-7 rounded border border-white/15 bg-transparent cursor-pointer overflow-hidden p-0"
+                  className="sr-only"
                 />
                 <div className="flex gap-1.5 items-center">
                   {['#000000', '#1e1b4b', '#4c0519', '#022c22'].map((color) => (
