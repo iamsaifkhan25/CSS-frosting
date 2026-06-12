@@ -97,8 +97,9 @@ export default function Home() {
               <p className="text-[10px] text-white/40 font-semibold uppercase tracking-wider">Dual Export</p>
             </div>
             <div>
-              <p className="text-xl md:text-2xl font-bold text-white">4+</p>
-              <p className="text-[10px] text-white/40 font-semibold uppercase tracking-wider">Presets</p>
+              <p className="text-xl md:text-2xl font-bold text-white">10+</p>
+              <p className="text-[10px] text-white/40 font-semibold uppercase tracking-wider leading-tight">Free & Premium Presets</p>
+              <p className="text-[8px] text-white/35 font-medium mt-0.5 normal-case tracking-normal">(More coming in future)</p>
             </div>
           </div>
         </div>
