@@ -24,7 +24,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing payment parameters.' }, { status: 400 })
     }
 
-    const keySecret = process.env.RAZORPAY_KEY_SECRET || 'placeholder_key_secret_to_avoid_build_crash'
+    const keySecret = process.env.RAZORPAY_KEY_SECRET
+    if (!keySecret) {
+      console.error('[RAZORPAY_VERIFY_ERROR]: RAZORPAY_KEY_SECRET is not configured.')
+      return NextResponse.json({ error: 'Payment gateway secret not configured.' }, { status: 500 })
+    }
 
     // Verify signature
     const text = `${razorpay_order_id}|${razorpay_payment_id}`
@@ -33,7 +37,20 @@ export async function POST(req: Request) {
       .update(text)
       .digest('hex')
 
-    if (generatedSignature !== razorpay_signature) {
+    // Use timing-safe comparison to prevent timing attacks
+    const generatedBuffer = Buffer.from(generatedSignature, 'hex')
+    const receivedBuffer = Buffer.from(razorpay_signature, 'hex')
+
+    let signatureMatches = false
+    try {
+      if (generatedBuffer.length === receivedBuffer.length) {
+        signatureMatches = crypto.timingSafeEqual(generatedBuffer, receivedBuffer)
+      }
+    } catch {
+      signatureMatches = false
+    }
+
+    if (!signatureMatches) {
       return NextResponse.json({ error: 'Payment signature verification failed.' }, { status: 400 })
     }
 
@@ -66,8 +83,9 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ success: true })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[RAZORPAY_VERIFY_API_ERROR]:', error)
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Internal Server Error'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

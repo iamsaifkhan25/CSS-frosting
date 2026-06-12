@@ -6,7 +6,11 @@ import crypto from 'crypto'
 export async function POST(req: Request) {
   const bodyText = await req.text()
   const sig = req.headers.get('x-razorpay-signature') || ''
-  const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || 'placeholder_webhook_secret_to_avoid_build_crash'
+  const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET
+  if (!webhookSecret) {
+    console.error('[RAZORPAY_WEBHOOK_ERROR]: RAZORPAY_WEBHOOK_SECRET is not configured.')
+    return NextResponse.json({ error: 'Webhook secret not configured.' }, { status: 500 })
+  }
 
   // Verify HMAC signature
   const expectedSignature = crypto
@@ -14,7 +18,20 @@ export async function POST(req: Request) {
     .update(bodyText)
     .digest('hex')
 
-  if (expectedSignature !== sig) {
+  // Use timing-safe comparison to prevent timing attacks
+  const expectedBuffer = Buffer.from(expectedSignature, 'hex')
+  const receivedBuffer = Buffer.from(sig, 'hex')
+
+  let signatureMatches = false
+  try {
+    if (expectedBuffer.length === receivedBuffer.length) {
+      signatureMatches = crypto.timingSafeEqual(expectedBuffer, receivedBuffer)
+    }
+  } catch {
+    signatureMatches = false
+  }
+
+  if (!signatureMatches) {
     console.error('[RAZORPAY_WEBHOOK_SIGNATURE_FAILED]')
     return NextResponse.json({ error: 'Signature mismatch.' }, { status: 400 })
   }
@@ -34,7 +51,7 @@ export async function POST(req: Request) {
     const orderNotes = event.payload.order?.entity?.notes || payloadEntity.notes
     
     if (!orderNotes) {
-      console.error('Webhook missing notes metadata:', event)
+      console.error('Webhook missing notes metadata for event:', event.id || event.event)
       return NextResponse.json({ error: 'Missing metadata notes' }, { status: 400 })
     }
 
@@ -43,7 +60,7 @@ export async function POST(req: Request) {
     const amountPaid = orderNotes.amount_paid || '0'
 
     if (!userId || !productId) {
-      console.error('Webhook parsed notes missing parameters:', orderNotes)
+      console.error('Webhook parsed notes missing parameters.')
       return NextResponse.json({ error: 'Incomplete notes data' }, { status: 400 })
     }
 
@@ -94,7 +111,7 @@ export async function POST(req: Request) {
       }
 
       console.log(`[RAZORPAY_WEBHOOK_SUCCESS]: User ${userId} bought ${productId}`)
-    } catch (dbErr: any) {
+    } catch (dbErr: unknown) {
       console.error('[WEBHOOK_DB_EXCEPTION]:', dbErr)
       return NextResponse.json({ error: 'Database exception occurred' }, { status: 500 })
     }

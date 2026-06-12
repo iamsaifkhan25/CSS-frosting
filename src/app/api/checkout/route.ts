@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
     if (dbError || !product) {
       console.error('[CHECKOUT_PRODUCT_QUERY_FAILED]:', dbError)
-      return NextResponse.json({ error: `Product not found. Database error: ${dbError?.message || 'Record not found'}` }, { status: 404 })
+      return NextResponse.json({ error: 'Product not found.' }, { status: 404 })
     }
 
     // Check if already purchased (specifically checking the product OR the lifetime all-access pass)
@@ -65,11 +65,12 @@ export async function POST(req: Request) {
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
-      keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_live_T0Nw1fEYYo8OtR',
+      keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
       userEmail: user.email,
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[RAZORPAY_CHECKOUT_API_ERROR]:', error)
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Internal Server Error'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
