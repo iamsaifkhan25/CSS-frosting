@@ -43,12 +43,20 @@ create policy "Users can view their own purchases" on public.purchases
 
 -- Insert sample premium products
 insert into public.products (id, name, premium_css_string, price) values
-('glass-premium-card', 'Premium Glassmorphic Credit Card', 'background: rgba(255, 255, 255, 0.07);\nbackdrop-filter: blur(16px) saturate(180%);\n-webkit-backdrop-filter: blur(16px) saturate(180%);\nborder: 1px solid rgba(255, 255, 255, 0.15);\nbox-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);\nborder-radius: 16px;\nbackground-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 100%);', 4.99),
-('glass-premium-modal', 'Premium Glassmorphic Dashboard Widget', 'background: rgba(15, 23, 42, 0.45);\nbackdrop-filter: blur(24px) saturate(200%);\n-webkit-backdrop-filter: blur(24px) saturate(200%);\nborder: 1px solid rgba(255, 255, 255, 0.1);\nbox-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);\nborder-radius: 24px;\nbackground-image: radial-gradient(at 0% 0%, rgba(255,255,255,0.05) 0px, transparent 50%);', 7.99)
+('glass-premium-card', 'Premium Glassmorphic Credit Card', 'background: rgba(255, 255, 255, 0.07);\nbackdrop-filter: blur(16px) saturate(180%);\n-webkit-backdrop-filter: blur(16px) saturate(180%);\nborder: 1px solid rgba(255, 255, 255, 0.15);\nbox-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);\nborder-radius: 16px;\nbackground-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 100%);', 3.99),
+('glass-premium-modal', 'Premium Glassmorphic Dashboard Widget', 'background: rgba(15, 23, 42, 0.45);\nbackdrop-filter: blur(24px) saturate(200%);\n-webkit-backdrop-filter: blur(24px) saturate(200%);\nborder: 1px solid rgba(255, 255, 255, 0.1);\nbox-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);\nborder-radius: 24px;\nbackground-image: radial-gradient(at 0% 0%, rgba(255,255,255,0.05) 0px, transparent 50%);', 4.99),
+('glass-premium-pricing', 'Cyber Pricing Panel', 'background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(236, 72, 153, 0.02) 100%);\nbackdrop-filter: blur(24px) saturate(180%);\n-webkit-backdrop-filter: blur(24px) saturate(180%);\nborder: 1px solid rgba(6, 182, 212, 0.25);\nbox-shadow: 0 16px 45px 0 rgba(6, 182, 212, 0.15);\nborder-radius: 24px;', 5.99),
+('glass-premium-player', 'Aura Music HUD', 'background: linear-gradient(135deg, rgba(244, 63, 94, 0.1) 0%, rgba(147, 51, 234, 0.03) 100%);\nbackdrop-filter: blur(16px) saturate(150%);\n-webkit-backdrop-filter: blur(16px) saturate(150%);\nborder: 1px solid rgba(244, 63, 94, 0.2);\nbox-shadow: 0 12px 36px 0 rgba(244, 63, 94, 0.2);\nborder-radius: 20px;', 3.99),
+('glass-premium-wallet', 'DeFi Wallet Panel', 'background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.01));\nbackdrop-filter: blur(30px) saturate(120%);\n-webkit-backdrop-filter: blur(30px) saturate(120%);\nborder: 1px solid rgba(255, 255, 255, 0.25);\nbox-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.4);\nborder-radius: 28px;', 7.99),
+('glass-premium-analytics', 'Cosmic Analytics Hub', 'background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.3) 100%);\nbackdrop-filter: blur(28px) saturate(200%);\n-webkit-backdrop-filter: blur(28px) saturate(200%);\nborder: 1px solid rgba(59, 130, 246, 0.2);\nbox-shadow: 0 15px 35px 0 rgba(59, 130, 246, 0.15);\nborder-radius: 22px;', 8.99),
+('glass-premium-all-access', 'All-Access Pass (Lifetime)', '/* Lifetime access pass - unlocks all presets */', 69.99)
 on conflict (id) do update set
   name = excluded.name,
   premium_css_string = excluded.premium_css_string,
   price = excluded.price;
+
+-- Grant privileges to service_role so APIs can write/modify if needed
+grant insert, update, delete, select on public.products to service_role;
 
 -- Automatically insert user records on sign up
 create or replace function public.handle_new_user()

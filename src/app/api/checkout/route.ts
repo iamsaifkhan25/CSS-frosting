@@ -30,17 +30,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: `Product not found. Database error: ${dbError?.message || 'Record not found'}` }, { status: 404 })
     }
 
-    // Check if already purchased
+    // Check if already purchased (specifically checking the product OR the lifetime all-access pass)
     const { data: existingPurchase } = await adminSupabase
       .from('purchases')
       .select('*')
       .eq('user_id', user.id)
-      .eq('product_id', productId)
       .eq('status', 'completed')
+      .in('product_id', [productId, 'glass-premium-all-access'])
       .maybeSingle()
 
     if (existingPurchase) {
-      return NextResponse.json({ error: 'Product already owned.' }, { status: 400 })
+      const msg = existingPurchase.product_id === 'glass-premium-all-access'
+        ? 'You already own the Lifetime All-Access Pass (all presets unlocked).'
+        : 'Product already owned.'
+      return NextResponse.json({ error: msg }, { status: 400 })
     }
 
     // Create Razorpay Order
@@ -49,7 +52,7 @@ export async function POST(req: Request) {
     const order = await razorpay.orders.create({
       amount: amountInCents,
       currency: 'USD',
-      receipt: `receipt_${user.id.substring(0, 10)}_${productId}`,
+      receipt: `rcp_${user.id.substring(0, 8)}_${productId.substring(0, 20)}`,
       notes: {
         product_id: productId,
         user_id: user.id,

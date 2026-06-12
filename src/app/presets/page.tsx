@@ -19,9 +19,24 @@ export default function Presets() {
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [filter, setFilter] = useState<'all' | 'free' | 'premium'>('all')
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+  const [emailInput, setEmailInput] = useState('')
+  const [subscribing, setSubscribing] = useState(false)
 
   const supabase = createClient()
   const router = useRouter()
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSubscribing(true)
+    // Simulate API call to register subscription
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    setNotification({
+      type: 'success',
+      message: `Successfully subscribed ${emailInput} to preset drop notifications!`
+    })
+    setEmailInput('')
+    setSubscribing(false)
+  }
 
   const fetchUserAndPurchases = async () => {
     setLoadingUser(true)
@@ -183,6 +198,7 @@ export default function Presets() {
   }
 
   const isPremiumLocked = (id: string) => {
+    if (purchases.includes('glass-premium-all-access')) return false
     return id.startsWith('glass-premium-') && !purchases.includes(id)
   }
 
@@ -224,12 +240,42 @@ export default function Presets() {
       canvasBg: 'cyberpunk'
     },
     {
+      id: 'glass-button-group',
+      name: 'Frosted Button Group',
+      description: 'Sleek inline pill tags and buttons featuring frosted borders and subtle micro-shadowing, optimized for actions.',
+      type: 'free',
+      icon: Sparkles,
+      price: '$0.00',
+      css: `background: rgba(255, 255, 255, 0.08);\nbackdrop-filter: blur(8px);\nborder: 1px solid rgba(255, 255, 255, 0.12);\nbox-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);\nborder-radius: 8px;`,
+      canvasBg: 'aurora'
+    },
+    {
+      id: 'glass-navbar',
+      name: 'Translucent Header Nav',
+      description: 'Horizontal top bar layout. Implements high backdrop-blur and a thin bottom border to separate headers cleanly.',
+      type: 'free',
+      icon: LayoutGrid,
+      price: '$0.00',
+      css: `background: rgba(10, 10, 10, 0.5);\nbackdrop-filter: blur(20px);\nborder-bottom: 1px solid rgba(255, 255, 255, 0.08);\nborder-radius: 0px;`,
+      canvasBg: 'ocean'
+    },
+    {
+      id: 'glass-tooltip',
+      name: 'Interactive Tooltip HUD',
+      description: 'Compact hover popover card with high translucent shine, ideal for tooltips and contextual alerts.',
+      type: 'free',
+      icon: Smartphone,
+      price: '$0.00',
+      css: `background: rgba(255, 255, 255, 0.12);\nbackdrop-filter: blur(12px);\nborder: 1px solid rgba(255, 255, 255, 0.2);\nbox-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.3);\nborder-radius: 12px;`,
+      canvasBg: 'cyberpunk'
+    },
+    {
       id: 'glass-premium-card',
       name: 'Elite Card Design',
       description: 'Premium golden-metallic custom layout. Employs advanced linear-gradient outlines and reflective high-saturate glass parameters.',
       type: 'premium',
       icon: CreditCard,
-      price: '$4.99',
+      price: '$3.99',
       css: `background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);\nbackdrop-filter: blur(20px) saturate(160%);\nborder: 1px solid rgba(255, 215, 0, 0.25);\nbox-shadow: 0 12px 40px 0 rgba(234, 179, 8, 0.15);\nborder-radius: 20px;`,
       canvasBg: 'sunset'
     },
@@ -239,9 +285,49 @@ export default function Presets() {
       description: 'Stunning server monitoring HUD widget. Includes gradient micro-glow overlays and an embedded sparkline data component.',
       type: 'premium',
       icon: Sparkles,
-      price: '$7.99',
+      price: '$4.99',
       css: `background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);\nbackdrop-filter: blur(18px) saturate(140%);\nborder: 1px solid rgba(255, 255, 255, 0.15);\nbox-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);\nborder-radius: 24px;`,
       canvasBg: 'cyberpunk'
+    },
+    {
+      id: 'glass-premium-pricing',
+      name: 'Cyber Pricing Panel',
+      description: 'High-saturate glass pricing card containing neon cyan border highlights, extreme blur, and deep dark inner drop shadows.',
+      type: 'premium',
+      icon: Sparkles,
+      price: '$5.99',
+      css: `background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(236, 72, 153, 0.02) 100%);\nbackdrop-filter: blur(24px) saturate(180%);\nborder: 1px solid rgba(6, 182, 212, 0.25);\nbox-shadow: 0 16px 45px 0 rgba(6, 182, 212, 0.15);\nborder-radius: 24px;`,
+      canvasBg: 'cyberpunk'
+    },
+    {
+      id: 'glass-premium-player',
+      name: 'Aura Music HUD',
+      description: 'Interactive media playback widget with double-layered blur effects, magenta tint filters, and frosted controller buttons.',
+      type: 'premium',
+      icon: Smartphone,
+      price: '$3.99',
+      css: `background: linear-gradient(135deg, rgba(244, 63, 94, 0.1) 0%, rgba(147, 51, 234, 0.03) 100%);\nbackdrop-filter: blur(16px) saturate(150%);\nborder: 1px solid rgba(244, 63, 94, 0.2);\nbox-shadow: 0 12px 36px 0 rgba(244, 63, 94, 0.2);\nborder-radius: 20px;`,
+      canvasBg: 'aurora'
+    },
+    {
+      id: 'glass-premium-wallet',
+      name: 'DeFi Wallet Panel',
+      description: 'Luxury cryptocurrency status widget with custom silver border shines, advanced radial grain filters, and custom transaction rows.',
+      type: 'premium',
+      icon: CreditCard,
+      price: '$7.99',
+      css: `background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.01));\nbackdrop-filter: blur(30px) saturate(120%);\nborder: 1px solid rgba(255, 255, 255, 0.25);\nbox-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.4);\nborder-radius: 28px;`,
+      canvasBg: 'sunset'
+    },
+    {
+      id: 'glass-premium-analytics',
+      name: 'Cosmic Analytics Hub',
+      description: 'Ultimate cockpit data console panel containing complex double-layer masking borders, intense backdrop saturate filters, and deep space blue background tinting.',
+      type: 'premium',
+      icon: LayoutGrid,
+      price: '$8.99',
+      css: `background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(30, 41, 59, 0.3) 100%);\nbackdrop-filter: blur(28px) saturate(200%);\nborder: 1px solid rgba(59, 130, 246, 0.2);\nbox-shadow: 0 15px 35px 0 rgba(59, 130, 246, 0.15);\nborder-radius: 22px;`,
+      canvasBg: 'ocean'
     }
   ]
 
@@ -302,6 +388,34 @@ export default function Presets() {
             ))}
           </div>
         </div>
+
+        {/* Lifetime All-Access Promo Banner */}
+        {!purchases.includes('glass-premium-all-access') && (
+          <div className="bg-gradient-to-r from-purple-950/20 via-black to-cyan-950/20 border border-yellow-500/20 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden shadow-2xl">
+            {/* Ambient glows */}
+            <div className="absolute top-[-50%] left-[-10%] w-96 h-96 bg-purple-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+            <div className="absolute bottom-[-50%] right-[-10%] w-96 h-96 bg-cyan-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+            
+            <div className="space-y-2 relative z-10 max-w-2xl text-left">
+              <span className="inline-flex items-center space-x-1 bg-yellow-500/15 border border-yellow-500/30 text-yellow-400 text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider animate-pulse">
+                <Sparkles className="w-3 h-3 fill-yellow-400" />
+                <span>LIFETIME VALUE PASS</span>
+              </span>
+              <h3 className="text-xl md:text-2xl font-black text-white">Unlock All Current & Future Presets</h3>
+              <p className="text-xs text-white/60 leading-relaxed">
+                Get instant, permanent access to all existing and future premium layouts. No recurring subscriptions. Unlock everything at once and accelerate your workflow.
+              </p>
+            </div>
+            <button
+              onClick={() => handlePurchase('glass-premium-all-access')}
+              disabled={purchasingId !== null}
+              className="bg-white hover:bg-white/90 active:scale-95 text-black px-8 py-3.5 rounded-xl font-bold text-xs transition-all flex items-center space-x-2 shrink-0 z-10 shadow-[0_4px_25px_rgba(255,255,255,0.15)] cursor-pointer"
+            >
+              <Lock className="w-3.5 h-3.5" />
+              <span>Get Lifetime All-Access ($69.99)</span>
+            </button>
+          </div>
+        )}
 
         {/* Presets Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -426,6 +540,36 @@ export default function Presets() {
             )
           })}
         </div>
+
+        {/* Newsletter Subscription Box */}
+        <section className="bg-white/[0.01] border border-white/5 rounded-2xl p-8 max-w-4xl mx-auto w-full text-center relative overflow-hidden mt-12">
+          {/* Subtle glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div className="relative z-10 space-y-4 max-w-lg mx-auto">
+            <h3 className="text-xl font-bold">Get Notified of New Presets</h3>
+            <p className="text-xs text-white/55">
+              We release premium, hand-crafted glassmorphic layouts every week. Subscribe to get instant email notifications whenever a new preset drops.
+            </p>
+            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2 pt-2">
+              <input
+                required
+                type="email"
+                placeholder="your.email@domain.com"
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-white/25 placeholder-white/35"
+              />
+              <button
+                type="submit"
+                disabled={subscribing}
+                className="bg-white text-black hover:bg-white/90 active:scale-95 font-bold px-6 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center space-x-1 shrink-0 cursor-pointer"
+              >
+                <span>Notify Me</span>
+              </button>
+            </form>
+          </div>
+        </section>
 
       </main>
 

@@ -110,62 +110,67 @@ export default function Home() {
             onMouseMove={handleMouseMove}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={handleMouseLeave}
-            style={{
-              transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-              transition: isHovered ? 'none' : 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)',
-            }}
-            className="w-80 md:w-96 aspect-[1.6] rounded-2xl relative p-6 cursor-pointer border shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300 flex flex-col justify-between"
+            className="w-80 md:w-96 aspect-[1.6] relative cursor-pointer"
           >
-            {/* Real-time Glass Styling applied to Card */}
-            <div 
-              className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-[16px] border border-white/15 rounded-2xl"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)',
-              }}
-            ></div>
-
-            {/* Glowing Mouse Tracker Overlay inside the glass */}
+            {/* The actual 3D visual card */}
             <div
               style={{
-                background: `radial-gradient(120px circle at ${glowX}% ${glowY}%, rgba(255,255,255,0.18), transparent 80%)`,
-                transition: isHovered ? 'none' : 'background 0.5s ease',
+                transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+                transition: isHovered ? 'none' : 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)',
               }}
-              className="absolute inset-0 pointer-events-none rounded-2xl z-0"
-            ></div>
+              className="w-full h-full rounded-2xl p-6 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden transition-all duration-300 flex flex-col justify-between pointer-events-none"
+            >
+              {/* Real-time Glass Styling applied to Card */}
+              <div 
+                className="absolute inset-0 -z-10 bg-white/10 backdrop-blur-[16px] border border-white/15 rounded-2xl"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%)',
+                }}
+              ></div>
 
-            {/* Card Content Header */}
-            <div className="flex justify-between items-start z-10">
-              <div className="flex flex-col space-y-1">
-                <span className="text-[9px] font-mono uppercase tracking-widest text-white/45 font-semibold">CSS Frosting</span>
-                <span className="text-xs font-semibold text-white/80">Interactive Demo Card</span>
-              </div>
-              <div className="w-9 h-6 bg-gradient-to-tr from-white/20 to-white/5 border border-white/10 rounded-md shadow-inner flex items-center justify-center">
-                <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-ping"></div>
-              </div>
-            </div>
+              {/* Glowing Mouse Tracker Overlay inside the glass */}
+              <div
+                style={{
+                  background: `radial-gradient(120px circle at ${glowX}% ${glowY}%, rgba(255,255,255,0.18), transparent 80%)`,
+                  transition: isHovered ? 'none' : 'background 0.5s ease',
+                }}
+                className="absolute inset-0 pointer-events-none rounded-2xl z-0"
+              ></div>
 
-            {/* Card Content Middle (Hover Notice) */}
-            <div className="my-2 z-10">
-              <p className="text-xs font-mono tracking-wider text-white/50">MOVE MOUSE TO TILT ME</p>
-              <div className="flex items-center space-x-2 mt-1">
-                <span className="text-[10px] font-mono text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">
-                  X: {coords.x.toFixed(2)}
-                </span>
-                <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
-                  Y: {coords.y.toFixed(2)}
-                </span>
+              {/* Card Content Header */}
+              <div className="flex justify-between items-start z-10">
+                <div className="flex flex-col space-y-1">
+                  <span className="text-[9px] font-mono uppercase tracking-widest text-white/45 font-semibold">CSS Frosting</span>
+                  <span className="text-xs font-semibold text-white/80">Interactive Demo Card</span>
+                </div>
+                <div className="w-9 h-6 bg-gradient-to-tr from-white/20 to-white/5 border border-white/10 rounded-md shadow-inner flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-ping"></div>
+                </div>
               </div>
-            </div>
 
-            {/* Card Content Footer */}
-            <div className="flex justify-between items-end z-10">
-              <div className="space-y-0.5">
-                <span className="text-[8px] font-mono uppercase tracking-wider text-white/35 block">User Interface</span>
-                <span className="text-[11px] font-medium text-white/70 uppercase">Interactive Glass</span>
+              {/* Card Content Middle (Hover Notice) */}
+              <div className="my-2 z-10">
+                <p className="text-xs font-mono tracking-wider text-white/50">MOVE MOUSE TO TILT ME</p>
+                <div className="flex items-center space-x-2 mt-1">
+                  <span className="text-[10px] font-mono text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">
+                    X: {coords.x.toFixed(2)}
+                  </span>
+                  <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
+                    Y: {coords.y.toFixed(2)}
+                  </span>
+                </div>
               </div>
-              <div className="space-y-0.5 text-right">
-                <span className="text-[8px] font-mono uppercase tracking-wider text-white/35 block">Format</span>
-                <span className="text-[11px] font-medium text-white/70 font-mono">3D RENDERED</span>
+
+              {/* Card Content Footer */}
+              <div className="flex justify-between items-end z-10">
+                <div className="space-y-0.5">
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-white/35 block">User Interface</span>
+                  <span className="text-[11px] font-medium text-white/70 uppercase">Interactive Glass</span>
+                </div>
+                <div className="space-y-0.5 text-right">
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-white/35 block">Format</span>
+                  <span className="text-[11px] font-medium text-white/70 font-mono">3D RENDERED</span>
+                </div>
               </div>
             </div>
           </div>
@@ -186,7 +191,10 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Feature 1 */}
-            <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col space-y-4 hover:border-white/15 hover:bg-white/[0.04] transition-all duration-300">
+            <Link
+              href="/generator"
+              className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col space-y-4 hover:border-white/15 hover:bg-white/[0.04] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+            >
               <div className="bg-purple-500/10 border border-purple-500/25 text-purple-400 p-3 rounded-xl w-fit">
                 <Paintbrush className="w-6 h-6" />
               </div>
@@ -194,10 +202,13 @@ export default function Home() {
               <p className="text-xs text-white/50 leading-relaxed">
                 Tune backdrop blur, tint opacity, border widths, shadow ranges, and solid tones. Modify precise slider values or type exact settings.
               </p>
-            </div>
+            </Link>
 
             {/* Feature 2 */}
-            <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col space-y-4 hover:border-white/15 hover:bg-white/[0.04] transition-all duration-300">
+            <Link
+              href="/generator"
+              className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col space-y-4 hover:border-white/15 hover:bg-white/[0.04] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+            >
               <div className="bg-cyan-500/10 border border-cyan-500/25 text-cyan-400 p-3 rounded-xl w-fit">
                 <Code className="w-6 h-6" />
               </div>
@@ -205,10 +216,13 @@ export default function Home() {
               <p className="text-xs text-white/50 leading-relaxed">
                 Export clean static CSS declarations, inline React stylings, Tailwind custom style definitions, or Styled-Components. One-click copy utility.
               </p>
-            </div>
+            </Link>
 
             {/* Feature 3 */}
-            <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col space-y-4 hover:border-white/15 hover:bg-white/[0.04] transition-all duration-300">
+            <Link
+              href="/presets"
+              className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col space-y-4 hover:border-white/15 hover:bg-white/[0.04] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+            >
               <div className="bg-yellow-500/10 border border-yellow-500/25 text-yellow-400 p-3 rounded-xl w-fit">
                 <Sparkles className="w-6 h-6" />
               </div>
@@ -216,14 +230,14 @@ export default function Home() {
               <p className="text-xs text-white/50 leading-relaxed">
                 Unlock advanced layouts incorporating multi-glow details, gradient masking, custom charts, and wallet authentication presets.
               </p>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="w-full border-t border-white/5 py-8 text-center text-[10px] text-white/30 tracking-wider font-semibold uppercase relative z-10 px-6">
-        <span>© 2026 CSS Frosting. Created by Advanced AI Pair Programmers.</span>
+        <span>© 2026 CSS Frosting • Crafted by Open Source Code</span>
       </footer>
     </div>
   )

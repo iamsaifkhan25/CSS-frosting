@@ -123,10 +123,14 @@ export default function Generator() {
       }
     )
 
-    // Handle checkout redirect feedback
+    // Handle query params on mount
     const query = new URLSearchParams(window.location.search)
-    const checkoutStatus = query.get('checkout')
+    const compParam = query.get('comp')
+    if (compParam) {
+      setSelectedComp(compParam)
+    }
 
+    const checkoutStatus = query.get('checkout')
     if (checkoutStatus === 'success') {
       setNotification({
         type: 'success',
@@ -309,6 +313,7 @@ border-radius: ${borderRadius}px;`
   }
 
   const isPremiumLocked = (id: string) => {
+    if (purchases.includes('glass-premium-all-access')) return false
     return id.startsWith('glass-premium-') && !purchases.includes(id)
   }
 
@@ -811,6 +816,159 @@ border-radius: ${borderRadius}px;`
                     </div>
                   )}
 
+                  {selectedComp === 'glass-button-group' && (
+                    <div 
+                      style={glassStyle}
+                      className="p-6 transition-[background-color,border-color,box-shadow] duration-300 border flex flex-col space-y-4 items-center justify-center rounded-2xl"
+                    >
+                      <span className="text-[9px] font-mono uppercase tracking-widest text-white/45 font-bold">Button & Tag Presets</span>
+                      <div className="flex flex-wrap gap-3 justify-center items-center">
+                        <button className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 text-xs font-bold text-white transition-all cursor-pointer">
+                          Primary Action
+                        </button>
+                        <button className="px-3.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[10px] font-semibold text-white/80 transition-all cursor-pointer">
+                          Secondary
+                        </button>
+                        <span className="px-2.5 py-1 rounded-md bg-purple-500/10 border border-purple-500/25 text-[9px] font-mono text-purple-400">
+                          Active Tag
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedComp === 'glass-navbar' && (
+                    <div 
+                      style={glassStyle}
+                      className="w-full max-w-sm p-4 transition-[background-color,border-color,box-shadow] duration-300 border flex items-center justify-between rounded-xl"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <div className="w-5 h-5 bg-white/20 rounded-md"></div>
+                        <span className="text-xs font-bold tracking-wide">Brand.io</span>
+                      </div>
+                      <div className="flex space-x-3 text-[10px] font-semibold text-white/60">
+                        <span>Home</span>
+                        <span>Docs</span>
+                        <span>Blog</span>
+                      </div>
+                      <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[8px]">
+                        U
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedComp === 'glass-tooltip' && (
+                    <div 
+                      style={glassStyle}
+                      className="max-w-[200px] p-4 transition-[background-color,border-color,box-shadow] duration-300 border flex flex-col space-y-2 rounded-xl"
+                    >
+                      <div className="flex items-center space-x-1">
+                        <Sparkles className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
+                        <span className="text-[10px] font-bold text-white/95">Pro Hint</span>
+                      </div>
+                      <p className="text-[9px] text-white/60 leading-relaxed">
+                        Backdrop-blur values over 20px create a very dense, frosted glass pane effect.
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedComp === 'glass-premium-pricing' && (
+                    <div 
+                      style={glassStyle}
+                      className="w-full max-w-[240px] p-5 flex flex-col space-y-4 transition-[background-color,border-color,box-shadow] duration-300 border rounded-2xl"
+                    >
+                      <div className="text-center space-y-1">
+                        <span className="text-[8px] bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                          Enterprise
+                        </span>
+                        <h4 className="text-2xl font-bold tracking-tight text-white mt-1">$99<span className="text-xs text-white/40 font-normal">/mo</span></h4>
+                      </div>
+                      <div className="space-y-1.5 border-t border-white/5 pt-3">
+                        {['Unlimited Assets', 'Real-time Sync', '24/7 Priority Support'].map((feat) => (
+                          <div key={feat} className="flex items-center space-x-2 text-[9px] text-white/60">
+                            <span className="w-1 h-1 bg-cyan-400 rounded-full"></span>
+                            <span>{feat}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <button className="w-full bg-white text-black py-2 rounded-xl text-xs font-bold transition-all cursor-pointer">
+                        Upgrade Now
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedComp === 'glass-premium-player' && (
+                    <div 
+                      style={glassStyle}
+                      className="w-full max-w-[260px] p-5 flex flex-col space-y-3 transition-[background-color,border-color,box-shadow] duration-300 border rounded-2xl"
+                    >
+                      <div className="flex space-x-3 items-center">
+                        <div className="w-12 h-12 rounded-lg bg-gradient-to-tr from-pink-500 to-rose-400 flex items-center justify-center shadow-md">
+                          <Sparkles className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold text-white truncate text-left">Neon Nights</p>
+                          <p className="text-[9px] text-white/40 truncate text-left">Lofi Dreamscape</p>
+                        </div>
+                      </div>
+                      <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
+                        <div className="bg-pink-500 w-1/3 h-full rounded-full"></div>
+                      </div>
+                      <div className="flex justify-between text-[7px] text-white/30 font-mono">
+                        <span>0:45</span>
+                        <span>2:15</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedComp === 'glass-premium-wallet' && (
+                    <div 
+                      style={glassStyle}
+                      className="w-full max-w-[280px] p-5 flex flex-col space-y-4 transition-[background-color,border-color,box-shadow] duration-300 border rounded-2xl"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-0.5 text-left">
+                          <span className="text-[7px] font-mono text-white/45 uppercase tracking-wider block">Wallet Balance</span>
+                          <span className="text-xl font-bold tracking-tight text-white">$14,204.88</span>
+                        </div>
+                        <span className="text-[8px] bg-white/10 border border-white/15 text-white/70 px-2 py-0.5 rounded font-mono">
+                          0x4e...9f
+                        </span>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-[9px] text-white/60">
+                          <span>Ethereum (ETH)</span>
+                          <span className="font-bold">3.24 ETH</span>
+                        </div>
+                        <div className="flex justify-between text-[9px] text-white/60">
+                          <span>USD Coin (USDC)</span>
+                          <span className="font-bold">4,120.00 USDC</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedComp === 'glass-premium-analytics' && (
+                    <div 
+                      style={glassStyle}
+                      className="w-full max-w-[260px] p-5 flex flex-col space-y-3.5 transition-[background-color,border-color,box-shadow] duration-300 border rounded-2xl"
+                    >
+                      <div className="flex justify-between items-center">
+                        <span className="text-[9px] font-bold text-white/70 uppercase tracking-wide">Live Data Engine</span>
+                        <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-ping"></div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-white/5 border border-white/10 p-2.5 rounded-lg text-left">
+                          <p className="text-[7px] text-white/40 uppercase font-semibold">Active Nodes</p>
+                          <p className="text-sm font-bold text-white mt-0.5">48 / 50</p>
+                        </div>
+                        <div className="bg-white/5 border border-white/10 p-2.5 rounded-lg text-left">
+                          <p className="text-[7px] text-white/40 uppercase font-semibold">Bandwidth</p>
+                          <p className="text-sm font-bold text-white mt-0.5">1.2 Gbps</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                 </div>
               )}
             </div>
@@ -925,14 +1083,17 @@ border-radius: ${borderRadius}px;`
             {[
               { id: 'credit-card', name: 'Card', icon: CreditCard },
               { id: 'login-modal', name: 'Modal', icon: Smartphone },
-              { id: 'dashboard-sidebar', name: 'Sidebar', icon: LayoutGrid }
+              { id: 'dashboard-sidebar', name: 'Sidebar', icon: LayoutGrid },
+              { id: 'glass-button-group', name: 'Buttons', icon: Sparkles },
+              { id: 'glass-navbar', name: 'Navbar', icon: LayoutGrid },
+              { id: 'glass-tooltip', name: 'Tooltip', icon: Smartphone }
             ].map((comp) => {
               const Icon = comp.icon
               return (
                 <button
                   key={comp.id}
                   onClick={() => setSelectedComp(comp.id)}
-                  className={`py-2 px-1 text-xs rounded-lg border font-semibold transition-all flex flex-col items-center justify-center space-y-1.5 ${
+                  className={`py-2 px-1 text-xs rounded-lg border font-semibold transition-all flex flex-col items-center justify-center space-y-1.5 cursor-pointer ${
                     selectedComp === comp.id
                       ? 'bg-white/10 border-white/20 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]'
                       : 'bg-transparent border-white/5 text-white/50 hover:text-white/80 hover:bg-white/5'
@@ -956,12 +1117,16 @@ border-radius: ${borderRadius}px;`
             <div className="grid grid-cols-2 gap-2">
               {[
                 { id: 'glass-premium-card', name: 'Elite Card' },
-                { id: 'glass-premium-modal', name: 'Live Status' }
+                { id: 'glass-premium-modal', name: 'Live Status' },
+                { id: 'glass-premium-pricing', name: 'Pricing Table' },
+                { id: 'glass-premium-player', name: 'Music HUD' },
+                { id: 'glass-premium-wallet', name: 'DeFi Wallet' },
+                { id: 'glass-premium-analytics', name: 'Analytics Hub' }
               ].map((pComp) => (
                 <button
                   key={pComp.id}
                   onClick={() => setSelectedComp(pComp.id)}
-                  className={`py-2 px-2 text-xs rounded-lg border font-semibold transition-all flex items-center justify-between ${
+                  className={`py-2 px-2 text-xs rounded-lg border font-semibold transition-all flex items-center justify-between cursor-pointer ${
                     selectedComp === pComp.id
                       ? 'bg-yellow-500/10 border-yellow-500/40 text-yellow-400 shadow-[inset_0_1px_1px_rgba(234,179,8,0.1)]'
                       : 'bg-transparent border-white/5 text-white/50 hover:text-white/80 hover:bg-white/5'

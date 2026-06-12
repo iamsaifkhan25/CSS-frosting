@@ -82,6 +82,9 @@ export default function Navbar() {
               >
                 <Icon className="w-3.5 h-3.5" />
                 <span>{link.name}</span>
+                {link.name === 'Presets' && (
+                  <span className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(250,204,21,0.6)]"></span>
+                )}
               </Link>
             )
           })}
@@ -146,6 +149,9 @@ export default function Navbar() {
                 >
                   <Icon className="w-4.5 h-4.5" />
                   <span>{link.name}</span>
+                  {link.name === 'Presets' && (
+                    <span className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(250,204,21,0.6)]"></span>
+                  )}
                 </Link>
               )
             })}

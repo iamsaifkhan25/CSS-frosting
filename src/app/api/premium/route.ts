@@ -20,13 +20,13 @@ export async function GET(req: Request) {
 
     const adminSupabase = createAdminClient()
 
-    // Query purchases
+    // Query purchases for either the specific product or the lifetime pass
     const { data: purchase, error: purchaseError } = await adminSupabase
       .from('purchases')
       .select('*')
       .eq('user_id', user.id)
-      .eq('product_id', productId)
       .eq('status', 'completed')
+      .in('product_id', [productId, 'glass-premium-all-access'])
       .maybeSingle()
 
     if (purchaseError) {
