@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase-server'
 import crypto from 'crypto'
 
+export const runtime = 'edge'
+
 export async function POST(req: Request) {
   const bodyText = await req.text()
   const sig = req.headers.get('x-razorpay-signature') || ''

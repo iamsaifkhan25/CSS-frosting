@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { createServerSupabase, createAdminClient } from '@/lib/supabase-server'
 import { razorpay } from '@/lib/razorpay'
 
+export const runtime = 'edge'
+
 export async function POST(req: Request) {
   try {
     const supabase = await createServerSupabase()

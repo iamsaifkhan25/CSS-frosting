@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { createServerSupabase, createAdminClient } from '@/lib/supabase-server'
 import crypto from 'crypto'
 
+export const runtime = 'edge'
+
 export async function POST(req: Request) {
   try {
     const supabase = await createServerSupabase()
