@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "CSS Frosting | Premium Glassmorphism Engine & Presets",
   description: "Generate and customize stunning glassmorphic components in real time. Export clean CSS, Tailwind CSS, or Styled-Components. Build with CSS Frosting.",
+  icons: {
+    icon: "/favicon/favicon.ico",
+    shortcut: "/favicon/favicon.ico",
+    apple: "/favicon/favicon.ico",
+  },
 };
 
 export default function RootLayout({
