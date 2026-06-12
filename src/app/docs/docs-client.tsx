@@ -75,7 +75,7 @@ export const GlassBox = styled.div\`
   ]
 
   return (
-    <div className="flex-1 bg-[#0a0a0a] text-white flex flex-col relative select-none">
+    <div className="flex-1 bg-[#0a0a0a] text-white flex flex-col relative">
       
       {/* Background grids */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff01_1px,transparent_1px),linear-gradient(to_bottom,#ffffff01_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none z-0"></div>
@@ -90,6 +90,46 @@ export const GlassBox = styled.div\`
             Understand the fundamentals of CSS Glassmorphism, integration configurations, and browser compatibility rules.
           </p>
         </div>
+
+        {/* Section: Quick Installation Commands */}
+        <section className="space-y-4">
+          <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+            <Sparkles className="w-5 h-5 text-yellow-400" />
+            <span>Quick Installation</span>
+          </h3>
+          <p className="text-xs md:text-sm text-white/60">
+            Click on any package manager command box below to copy it instantly and install support libraries:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div 
+              onClick={() => copyCode('install-lucide', 'npm install lucide-react')}
+              className="bg-white/[0.02] border border-white/10 hover:border-purple-500/30 rounded-xl p-4 flex items-center justify-between cursor-pointer group hover:bg-white/[0.04] transition-all duration-200"
+              title="Click to copy command"
+            >
+              <div className="space-y-1">
+                <span className="text-[9px] font-semibold uppercase text-purple-400 tracking-wider">Install Lucide Icons</span>
+                <code className="text-xs font-mono text-white/80 block select-all">npm install lucide-react</code>
+              </div>
+              <div className="text-white/40 group-hover:text-white transition-colors">
+                {copiedSection === 'install-lucide' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+              </div>
+            </div>
+
+            <div 
+              onClick={() => copyCode('install-styled', 'npm install styled-components')}
+              className="bg-white/[0.02] border border-white/10 hover:border-purple-500/30 rounded-xl p-4 flex items-center justify-between cursor-pointer group hover:bg-white/[0.04] transition-all duration-200"
+              title="Click to copy command"
+            >
+              <div className="space-y-1">
+                <span className="text-[9px] font-semibold uppercase text-purple-400 tracking-wider">Install Styled Components</span>
+                <code className="text-xs font-mono text-white/80 block select-all">npm install styled-components</code>
+              </div>
+              <div className="text-white/40 group-hover:text-white transition-colors">
+                {copiedSection === 'install-styled' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Section: Anatomy */}
         <section className="space-y-4">
