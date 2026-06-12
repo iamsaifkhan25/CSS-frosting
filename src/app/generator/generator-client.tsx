@@ -782,7 +782,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'credit-card' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-sm aspect-[1.6] p-6 relative flex flex-col justify-between transition-[background-color,border-color,box-shadow] duration-300 border select-text z-0"
+                      className="w-full max-w-sm aspect-[1.6] p-6 relative flex flex-col justify-between transition-transform duration-200 border select-text z-0"
                     >
                       {/* Top section */}
                       <div className="flex justify-between items-start">
@@ -831,7 +831,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'login-modal' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-[280px] p-5 flex flex-col space-y-4 transition-[background-color,border-color,box-shadow] duration-300 border select-text z-0"
+                      className="w-full max-w-[280px] p-5 flex flex-col space-y-4 transition-transform duration-200 border select-text z-0"
                     >
                       <div className="space-y-1 text-center">
                         <input
@@ -883,7 +883,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'dashboard-sidebar' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-[220px] h-[260px] p-4 flex flex-col justify-between transition-[background-color,border-color,box-shadow] duration-300 border select-text z-0"
+                      className="w-full max-w-[220px] h-[260px] p-4 flex flex-col justify-between transition-transform duration-200 border select-text z-0"
                     >
                       <div className="space-y-5">
                         <div className="flex items-center space-x-2 px-1">
@@ -926,7 +926,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'glass-premium-card' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-sm aspect-[1.6] p-6 relative flex flex-col justify-between transition-[background-color,border-color,box-shadow] duration-300 border border-white/20"
+                      className="w-full max-w-sm aspect-[1.6] p-6 relative flex flex-col justify-between transition-transform duration-200 border border-white/20"
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 rounded-2xl pointer-events-none"></div>
                       
@@ -963,7 +963,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'glass-premium-modal' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-[260px] p-5 flex flex-col space-y-3.5 transition-[background-color,border-color,box-shadow] duration-300 border"
+                      className="w-full max-w-[260px] p-5 flex flex-col space-y-3.5 transition-transform duration-200 border"
                     >
                       <div className="flex justify-between items-center">
                         <div className="flex items-center space-x-1.5">
@@ -1007,7 +1007,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'glass-button-group' && (
                     <div 
                       style={glassStyle}
-                      className="p-6 transition-[background-color,border-color,box-shadow] duration-300 border flex flex-col space-y-4 items-center justify-center rounded-2xl"
+                      className="p-6 transition-transform duration-200 border flex flex-col space-y-4 items-center justify-center rounded-2xl"
                     >
                       <span className="text-[9px] font-mono uppercase tracking-widest text-white/45 font-bold">Button & Tag Presets</span>
                       <div className="flex flex-wrap gap-3 justify-center items-center">
@@ -1027,7 +1027,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'glass-navbar' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-sm p-4 transition-[background-color,border-color,box-shadow] duration-300 border flex items-center justify-between rounded-xl"
+                      className="w-full max-w-sm p-4 transition-transform duration-200 border flex items-center justify-between rounded-xl"
                     >
                       <div className="flex items-center space-x-2">
                         <div className="w-5 h-5 bg-white/20 rounded-md"></div>
@@ -1047,7 +1047,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'glass-tooltip' && (
                     <div 
                       style={glassStyle}
-                      className="max-w-[200px] p-4 transition-[background-color,border-color,box-shadow] duration-300 border flex flex-col space-y-2 rounded-xl"
+                      className="max-w-[200px] p-4 transition-transform duration-200 border flex flex-col space-y-2 rounded-xl"
                     >
                       <div className="flex items-center space-x-1">
                         <Sparkles className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
@@ -1062,7 +1062,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'glass-premium-pricing' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-[240px] p-5 flex flex-col space-y-4 transition-[background-color,border-color,box-shadow] duration-300 border rounded-2xl"
+                      className="w-full max-w-[240px] p-5 flex flex-col space-y-4 transition-transform duration-200 border rounded-2xl"
                     >
                       <div className="text-center space-y-1">
                         <span className="text-[8px] bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
@@ -1087,7 +1087,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'glass-premium-player' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-[260px] p-5 flex flex-col space-y-3 transition-[background-color,border-color,box-shadow] duration-300 border rounded-2xl"
+                      className="w-full max-w-[260px] p-5 flex flex-col space-y-3 transition-transform duration-200 border rounded-2xl"
                     >
                       <div className="flex space-x-3 items-center">
                         <div className="w-12 h-12 rounded-lg bg-gradient-to-tr from-pink-500 to-rose-400 flex items-center justify-center shadow-md">
@@ -1111,7 +1111,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'glass-premium-wallet' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-[280px] p-5 flex flex-col space-y-4 transition-[background-color,border-color,box-shadow] duration-300 border rounded-2xl"
+                      className="w-full max-w-[280px] p-5 flex flex-col space-y-4 transition-transform duration-200 border rounded-2xl"
                     >
                       <div className="flex justify-between items-start">
                         <div className="space-y-0.5 text-left">
@@ -1138,7 +1138,7 @@ border-radius: ${borderRadius}px;`
                   {selectedComp === 'glass-premium-analytics' && (
                     <div 
                       style={glassStyle}
-                      className="w-full max-w-[260px] p-5 flex flex-col space-y-3.5 transition-[background-color,border-color,box-shadow] duration-300 border rounded-2xl"
+                      className="w-full max-w-[260px] p-5 flex flex-col space-y-3.5 transition-transform duration-200 border rounded-2xl"
                     >
                       <div className="flex justify-between items-center">
                         <span className="text-[9px] font-bold text-white/70 uppercase tracking-wide">Live Data Engine</span>
@@ -1376,50 +1376,80 @@ border-radius: ${borderRadius}px;`
 
           {/* Background Opacity */}
           <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 space-y-2">
-            <div className="flex justify-between text-xs font-semibold">
+            <div className="flex justify-between text-xs font-semibold mb-0.5">
               <span className="text-white/70">Background Opacity</span>
               <span className="text-white/50 font-mono">{(bgOpacity * 100).toFixed(0)}%</span>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={bgOpacity * 100}
-              onChange={(e) => setBgOpacity(Number(e.target.value) / 100)}
-              className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
-            />
+            <div className="flex items-center space-x-3">
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={Math.round(bgOpacity * 100)}
+                onChange={(e) => setBgOpacity(Number(e.target.value) / 100)}
+                className="flex-1 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+              />
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={Math.round(bgOpacity * 100)}
+                onChange={(e) => setBgOpacity(Math.max(0, Math.min(100, Number(e.target.value))) / 100)}
+                className="w-12 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-center font-mono text-[10px] text-white focus:outline-none focus:border-white/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
           </div>
 
           {/* Backdrop Blur Radius */}
           <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 space-y-2">
-            <div className="flex justify-between text-xs font-semibold">
+            <div className="flex justify-between text-xs font-semibold mb-0.5">
               <span className="text-white/70">Backdrop Blur Radius</span>
               <span className="text-white/50 font-mono">{blurRadius}px</span>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="40"
-              value={blurRadius}
-              onChange={(e) => setBlurRadius(Number(e.target.value))}
-              className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
-            />
+            <div className="flex items-center space-x-3">
+              <input
+                type="range"
+                min="0"
+                max="40"
+                value={blurRadius}
+                onChange={(e) => setBlurRadius(Number(e.target.value))}
+                className="flex-1 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+              />
+              <input
+                type="number"
+                min="0"
+                max="40"
+                value={blurRadius}
+                onChange={(e) => setBlurRadius(Math.max(0, Math.min(40, Number(e.target.value))))}
+                className="w-12 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-center font-mono text-[10px] text-white focus:outline-none focus:border-white/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
           </div>
 
           {/* Backdrop Saturation */}
           <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 space-y-2">
-            <div className="flex justify-between text-xs font-semibold">
+            <div className="flex justify-between text-xs font-semibold mb-0.5">
               <span className="text-white/70">Backdrop Saturation</span>
               <span className="text-white/50 font-mono">{saturate}%</span>
             </div>
-            <input
-              type="range"
-              min="50"
-              max="300"
-              value={saturate}
-              onChange={(e) => setSaturate(Number(e.target.value))}
-              className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
-            />
+            <div className="flex items-center space-x-3">
+              <input
+                type="range"
+                min="50"
+                max="300"
+                value={saturate}
+                onChange={(e) => setSaturate(Number(e.target.value))}
+                className="flex-1 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+              />
+              <input
+                type="number"
+                min="50"
+                max="300"
+                value={saturate}
+                onChange={(e) => setSaturate(Math.max(50, Math.min(300, Number(e.target.value))))}
+                className="w-12 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-center font-mono text-[10px] text-white focus:outline-none focus:border-white/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
           </div>
 
           {/* Border Width & Opacity */}
@@ -1429,15 +1459,26 @@ border-radius: ${borderRadius}px;`
                 <span className="text-white/70">Border Width</span>
                 <span className="text-white/50 font-mono">{borderWidth}px</span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="5"
-                step="0.5"
-                value={borderWidth}
-                onChange={(e) => setBorderWidth(Number(e.target.value))}
-                className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
-              />
+              <div className="flex items-center space-x-3">
+                <input
+                  type="range"
+                  min="0"
+                  max="5"
+                  step="0.5"
+                  value={borderWidth}
+                  onChange={(e) => setBorderWidth(Number(e.target.value))}
+                  className="flex-1 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+                />
+                <input
+                  type="number"
+                  min="0"
+                  max="5"
+                  step="0.5"
+                  value={borderWidth}
+                  onChange={(e) => setBorderWidth(Math.max(0, Math.min(5, Number(e.target.value))))}
+                  className="w-12 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-center font-mono text-[10px] text-white focus:outline-none focus:border-white/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+              </div>
             </div>
 
             <div>
@@ -1445,47 +1486,77 @@ border-radius: ${borderRadius}px;`
                 <span className="text-white/70">Border Opacity</span>
                 <span className="text-white/50 font-mono">{(borderOpacity * 100).toFixed(0)}%</span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={borderOpacity * 100}
-                onChange={(e) => setBorderOpacity(Number(e.target.value) / 100)}
-                className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
-              />
+              <div className="flex items-center space-x-3">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={Math.round(borderOpacity * 100)}
+                  onChange={(e) => setBorderOpacity(Number(e.target.value) / 100)}
+                  className="flex-1 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+                />
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={Math.round(borderOpacity * 100)}
+                  onChange={(e) => setBorderOpacity(Math.max(0, Math.min(100, Number(e.target.value))) / 100)}
+                  className="w-12 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-center font-mono text-[10px] text-white focus:outline-none focus:border-white/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+              </div>
             </div>
           </div>
 
           {/* Border Corners */}
           <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 space-y-2">
-            <div className="flex justify-between text-xs font-semibold">
+            <div className="flex justify-between text-xs font-semibold mb-0.5">
               <span className="text-white/70">Border Radius (Rounded)</span>
               <span className="text-white/50 font-mono">{borderRadius}px</span>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="40"
-              value={borderRadius}
-              onChange={(e) => setBorderRadius(Number(e.target.value))}
-              className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
-            />
+            <div className="flex items-center space-x-3">
+              <input
+                type="range"
+                min="0"
+                max="40"
+                value={borderRadius}
+                onChange={(e) => setBorderRadius(Number(e.target.value))}
+                className="flex-1 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+              />
+              <input
+                type="number"
+                min="0"
+                max="40"
+                value={borderRadius}
+                onChange={(e) => setBorderRadius(Math.max(0, Math.min(40, Number(e.target.value))))}
+                className="w-12 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-center font-mono text-[10px] text-white focus:outline-none focus:border-white/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
           </div>
 
           {/* Noise Frosted Texture */}
           <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 space-y-2">
-            <div className="flex justify-between text-xs font-semibold">
+            <div className="flex justify-between text-xs font-semibold mb-0.5">
               <span className="text-white/70">Frosted Noise Texture</span>
               <span className="text-white/50 font-mono">{noiseOpacity}%</span>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="20"
-              value={noiseOpacity}
-              onChange={(e) => setNoiseOpacity(Number(e.target.value))}
-              className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
-            />
+            <div className="flex items-center space-x-3">
+              <input
+                type="range"
+                min="0"
+                max="20"
+                value={noiseOpacity}
+                onChange={(e) => setNoiseOpacity(Number(e.target.value))}
+                className="flex-1 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+              />
+              <input
+                type="number"
+                min="0"
+                max="20"
+                value={noiseOpacity}
+                onChange={(e) => setNoiseOpacity(Math.max(0, Math.min(20, Number(e.target.value))))}
+                className="w-12 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-center font-mono text-[10px] text-white focus:outline-none focus:border-white/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </div>
           </div>
 
           {/* Box Shadow parameters */}
@@ -1495,14 +1566,24 @@ border-radius: ${borderRadius}px;`
                 <span className="text-white/70">Shadow Opacity</span>
                 <span className="text-white/50 font-mono">{shadowOpacity}%</span>
               </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={shadowOpacity}
-                onChange={(e) => setShadowOpacity(Number(e.target.value))}
-                className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
-              />
+              <div className="flex items-center space-x-3">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={shadowOpacity}
+                  onChange={(e) => setShadowOpacity(Number(e.target.value))}
+                  className="flex-1 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white"
+                />
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={shadowOpacity}
+                  onChange={(e) => setShadowOpacity(Math.max(0, Math.min(100, Number(e.target.value))))}
+                  className="w-12 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-center font-mono text-[10px] text-white focus:outline-none focus:border-white/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+              </div>
             </div>
 
             <div>
