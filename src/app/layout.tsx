@@ -17,10 +17,14 @@ export const metadata: Metadata = {
   title: "CSS Frosting | Premium Glassmorphism Engine & Presets",
   description: "Generate and customize stunning glassmorphic components in real time. Export clean CSS, Tailwind CSS, or Styled-Components. Build with CSS Frosting.",
   icons: {
-    icon: "/favicon/favicon.ico",
+    icon: [
+      { url: "/favicon/favicon.ico" },
+      { url: "/favicon/favicon.svg", type: "image/svg+xml" },
+    ],
     shortcut: "/favicon/favicon.ico",
-    apple: "/favicon/favicon.ico",
+    apple: "/favicon/apple-touch-icon.png",
   },
+  manifest: "/favicon/site.webmanifest",
 };
 
 export default function RootLayout({
