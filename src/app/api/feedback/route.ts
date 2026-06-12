@@ -60,8 +60,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: true,
-        // The first email will prompt the user to activate their inbox
-        message: 'Thank you! Your feedback has been sent. If this is your first submission, please check your inbox at harukiwaves@zohomail.in to confirm/activate FormSubmit.',
+        message: 'Thank you! Your message has been sent.',
       },
       { status: 200 }
     )
