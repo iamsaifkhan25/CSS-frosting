@@ -18,13 +18,18 @@ export const metadata: Metadata = {
   description: "Generate and customize stunning glassmorphic components in real time. Export clean CSS, Tailwind CSS, or Styled-Components. Build with CSS Frosting.",
   icons: {
     icon: [
-      { url: "/favicon/favicon.ico" },
-      { url: "/favicon/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
     ],
-    shortcut: "/favicon/favicon.ico",
-    apple: "/favicon/apple-touch-icon.png",
+    shortcut: "/favicon.ico",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
-  manifest: "/favicon/site.webmanifest",
+  manifest: "/site.webmanifest",
+  appleWebApp: {
+    title: "CSSFrosting",
+  },
 };
 
 export default function RootLayout({
