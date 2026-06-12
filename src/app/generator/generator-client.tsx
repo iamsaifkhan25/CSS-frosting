@@ -94,8 +94,8 @@ function InlineColorPicker({ color, onChange }: { color: string; onChange: (hex:
   const { h, s, v } = hexToHsv(color);
   const svRef = useRef<HTMLDivElement>(null);
   const hueRef = useRef<HTMLDivElement>(null);
-  const [isDraggingSV, setIsDraggingSV] = useState(false);
-  const [isDraggingHue, setIsDraggingHue] = useState(false);
+  const [isTrackingSV, setIsTrackingSV] = useState(false);
+  const [isTrackingHue, setIsTrackingHue] = useState(false);
 
   const handleSVMove = (clientX: number, clientY: number) => {
     if (!svRef.current) return;
@@ -117,44 +117,37 @@ function InlineColorPicker({ color, onChange }: { color: string; onChange: (hex:
 
   useEffect(() => {
     const handleGlobalMouseMove = (e: MouseEvent) => {
-      if (isDraggingSV) {
+      if (isTrackingSV) {
         handleSVMove(e.clientX, e.clientY);
       }
-      if (isDraggingHue) {
+      if (isTrackingHue) {
         handleHueMove(e.clientX);
       }
     };
 
-    const handleGlobalMouseUp = () => {
-      setIsDraggingSV(false);
-      setIsDraggingHue(false);
-    };
-
-    if (isDraggingSV || isDraggingHue) {
+    if (isTrackingSV || isTrackingHue) {
       window.addEventListener('mousemove', handleGlobalMouseMove);
-      window.addEventListener('mouseup', handleGlobalMouseUp);
     }
 
     return () => {
       window.removeEventListener('mousemove', handleGlobalMouseMove);
-      window.removeEventListener('mouseup', handleGlobalMouseUp);
     };
-  }, [isDraggingSV, isDraggingHue, h, s, v]);
+  }, [isTrackingSV, isTrackingHue, h, s, v]);
 
-  const handleSVPointerMove = (e: React.PointerEvent) => {
-    if (e.buttons === 1 || e.pointerType === 'mouse') {
-      if (e.buttons === 1) {
-        setIsDraggingSV(true);
-      }
+  const handleSVClick = (e: React.PointerEvent) => {
+    if (isTrackingSV) {
+      setIsTrackingSV(false);
+    } else {
+      setIsTrackingSV(true);
       handleSVMove(e.clientX, e.clientY);
     }
   };
 
-  const handleHuePointerMove = (e: React.PointerEvent) => {
-    if (e.buttons === 1 || e.pointerType === 'mouse') {
-      if (e.buttons === 1) {
-        setIsDraggingHue(true);
-      }
+  const handleHueClick = (e: React.PointerEvent) => {
+    if (isTrackingHue) {
+      setIsTrackingHue(false);
+    } else {
+      setIsTrackingHue(true);
       handleHueMove(e.clientX);
     }
   };
@@ -166,12 +159,12 @@ function InlineColorPicker({ color, onChange }: { color: string; onChange: (hex:
       {/* Saturation/Value Box */}
       <div
         ref={svRef}
-        onPointerDown={(e) => {
-          setIsDraggingSV(true);
-          handleSVMove(e.clientX, e.clientY);
-        }}
-        onPointerMove={handleSVPointerMove}
-        className="w-full h-24 rounded-lg relative cursor-crosshair overflow-hidden border border-white/10"
+        onPointerDown={handleSVClick}
+        className={`w-full h-24 rounded-lg relative overflow-hidden border transition-all duration-300 ${
+          isTrackingSV 
+            ? 'cursor-crosshair shadow-[0_0_12px_rgba(168,85,247,0.25)] border-purple-500/30' 
+            : 'cursor-default border-white/10 hover:border-white/20'
+        }`}
         style={{
           backgroundColor: hueBg,
           backgroundImage: 'linear-gradient(to right, #fff, transparent), linear-gradient(to top, #000, transparent)',
@@ -179,7 +172,9 @@ function InlineColorPicker({ color, onChange }: { color: string; onChange: (hex:
         }}
       >
         <div
-          className="w-3 h-3 rounded-full border border-white absolute -translate-x-1/2 -translate-y-1/2 shadow-[0_0_4px_rgba(0,0,0,0.5)] pointer-events-none"
+          className={`w-3.5 h-3.5 rounded-full border absolute -translate-x-1/2 -translate-y-1/2 shadow-[0_0_4px_rgba(0,0,0,0.5)] pointer-events-none transition-all duration-150 ${
+            isTrackingSV ? 'border-purple-400 scale-125 bg-white/25' : 'border-white bg-transparent'
+          }`}
           style={{
             left: `${s}%`,
             top: `${100 - v}%`,
@@ -191,18 +186,20 @@ function InlineColorPicker({ color, onChange }: { color: string; onChange: (hex:
       {/* Hue Slider */}
       <div
         ref={hueRef}
-        onPointerDown={(e) => {
-          setIsDraggingHue(true);
-          handleHueMove(e.clientX);
-        }}
-        onPointerMove={handleHuePointerMove}
-        className="w-full h-2.5 rounded-full relative cursor-ew-resize overflow-hidden border border-white/10"
+        onPointerDown={handleHueClick}
+        className={`w-full h-2.5 rounded-full relative overflow-hidden border transition-all duration-300 ${
+          isTrackingHue 
+            ? 'cursor-ew-resize shadow-[0_0_12px_rgba(6,182,212,0.25)] border-cyan-500/30' 
+            : 'cursor-default border-white/10 hover:border-white/20'
+        }`}
         style={{
           background: 'linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)'
         }}
       >
         <div
-          className="w-3.5 h-3.5 rounded-full border border-white absolute top-1/2 -translate-y-1/2 -translate-x-1/2 shadow-[0_0_3px_rgba(0,0,0,0.5)] bg-white"
+          className={`w-3.5 h-3.5 rounded-full absolute top-1/2 -translate-y-1/2 -translate-x-1/2 shadow-[0_0_3px_rgba(0,0,0,0.5)] bg-white transition-all duration-150 ${
+            isTrackingHue ? 'border-2 border-cyan-400 scale-110' : 'border border-white'
+          }`}
           style={{
             left: `${(h / 360) * 100}%`
           }}
