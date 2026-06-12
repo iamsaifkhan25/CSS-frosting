@@ -21,6 +21,197 @@ function hexToRgb(hex: string) {
     : { r: 255, g: 255, b: 255 }
 }
 
+// Convert hex to HSV
+function hexToHsv(hex: string) {
+  let r = 0, g = 0, b = 0;
+  const hexClean = hex.replace(/^#/, '');
+  if (hexClean.length === 3) {
+    r = parseInt(hexClean[0] + hexClean[0], 16) / 255;
+    g = parseInt(hexClean[1] + hexClean[1], 16) / 255;
+    b = parseInt(hexClean[2] + hexClean[2], 16) / 255;
+  } else if (hexClean.length === 6) {
+    r = parseInt(hexClean.slice(0, 2), 16) / 255;
+    g = parseInt(hexClean.slice(2, 4), 16) / 255;
+    b = parseInt(hexClean.slice(4, 6), 16) / 255;
+  }
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h = 0;
+  let s = 0;
+  const v = max;
+
+  const d = max - min;
+  s = max === 0 ? 0 : d / max;
+
+  if (max !== min) {
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    v: Math.round(v * 100)
+  };
+}
+
+// Convert HSV to hex
+function hsvToHex(h: number, s: number, v: number) {
+  h /= 360;
+  s /= 100;
+  v /= 100;
+
+  let r = 0, g = 0, b = 0;
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const p = v * (1 - s);
+  const q = v * (1 - f * s);
+  const t = v * (1 - (1 - f) * s);
+
+  switch (i % 6) {
+    case 0: r = v; g = t; b = p; break;
+    case 1: r = q; g = v; b = p; break;
+    case 2: r = p; g = v; b = t; break;
+    case 3: r = p; g = q; b = v; break;
+    case 4: r = t; g = p; b = v; break;
+    case 5: r = v; g = p; b = q; break;
+  }
+
+  const toHex = (c: number) => {
+    const hex = Math.round(c * 255).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  };
+
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function InlineColorPicker({ color, onChange }: { color: string; onChange: (hex: string) => void }) {
+  const { h, s, v } = hexToHsv(color);
+  const svRef = useRef<HTMLDivElement>(null);
+  const hueRef = useRef<HTMLDivElement>(null);
+  const [isDraggingSV, setIsDraggingSV] = useState(false);
+  const [isDraggingHue, setIsDraggingHue] = useState(false);
+
+  const handleSVMove = (clientX: number, clientY: number) => {
+    if (!svRef.current) return;
+    const rect = svRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const y = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+    const newS = Math.round(x * 100);
+    const newV = Math.round((1 - y) * 100);
+    onChange(hsvToHex(h, newS, newV));
+  };
+
+  const handleHueMove = (clientX: number) => {
+    if (!hueRef.current) return;
+    const rect = hueRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const newH = Math.round(x * 360);
+    onChange(hsvToHex(newH, s, v));
+  };
+
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (isDraggingSV) {
+        handleSVMove(e.clientX, e.clientY);
+      }
+      if (isDraggingHue) {
+        handleHueMove(e.clientX);
+      }
+    };
+
+    const handleGlobalMouseUp = () => {
+      setIsDraggingSV(false);
+      setIsDraggingHue(false);
+    };
+
+    if (isDraggingSV || isDraggingHue) {
+      window.addEventListener('mousemove', handleGlobalMouseMove);
+      window.addEventListener('mouseup', handleGlobalMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [isDraggingSV, isDraggingHue, h, s, v]);
+
+  const handleSVPointerMove = (e: React.PointerEvent) => {
+    if (e.buttons === 1 || e.pointerType === 'mouse') {
+      if (e.buttons === 1) {
+        setIsDraggingSV(true);
+      }
+      handleSVMove(e.clientX, e.clientY);
+    }
+  };
+
+  const handleHuePointerMove = (e: React.PointerEvent) => {
+    if (e.buttons === 1 || e.pointerType === 'mouse') {
+      if (e.buttons === 1) {
+        setIsDraggingHue(true);
+      }
+      handleHueMove(e.clientX);
+    }
+  };
+
+  const hueBg = hsvToHex(h, 100, 100);
+
+  return (
+    <div className="space-y-2 select-none">
+      {/* Saturation/Value Box */}
+      <div
+        ref={svRef}
+        onPointerDown={(e) => {
+          setIsDraggingSV(true);
+          handleSVMove(e.clientX, e.clientY);
+        }}
+        onPointerMove={handleSVPointerMove}
+        className="w-full h-24 rounded-lg relative cursor-crosshair overflow-hidden border border-white/10"
+        style={{
+          backgroundColor: hueBg,
+          backgroundImage: 'linear-gradient(to right, #fff, transparent), linear-gradient(to top, #000, transparent)',
+          backgroundBlendMode: 'multiply'
+        }}
+      >
+        <div
+          className="w-3 h-3 rounded-full border border-white absolute -translate-x-1/2 -translate-y-1/2 shadow-[0_0_4px_rgba(0,0,0,0.5)] pointer-events-none"
+          style={{
+            left: `${s}%`,
+            top: `${100 - v}%`,
+            backgroundColor: color
+          }}
+        />
+      </div>
+
+      {/* Hue Slider */}
+      <div
+        ref={hueRef}
+        onPointerDown={(e) => {
+          setIsDraggingHue(true);
+          handleHueMove(e.clientX);
+        }}
+        onPointerMove={handleHuePointerMove}
+        className="w-full h-2.5 rounded-full relative cursor-ew-resize overflow-hidden border border-white/10"
+        style={{
+          background: 'linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)'
+        }}
+      >
+        <div
+          className="w-3.5 h-3.5 rounded-full border border-white absolute top-1/2 -translate-y-1/2 -translate-x-1/2 shadow-[0_0_3px_rgba(0,0,0,0.5)] bg-white"
+          style={{
+            left: `${(h / 360) * 100}%`
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function Generator() {
   // Supabase Auth & Purchase state
   const [user, setUser] = useState<any>(null)
@@ -43,10 +234,6 @@ export default function Generator() {
   const [shadowOpacity, setShadowOpacity] = useState(20)
   const [shadowColor, setShadowColor] = useState('#000000')
   const [noiseOpacity, setNoiseOpacity] = useState(4) // Frosted noise
-
-  // Refs for custom color pickers
-  const tintColorInputRef = useRef<HTMLInputElement>(null)
-  const shadowColorInputRef = useRef<HTMLInputElement>(null)
 
   // Selected component
   const [selectedComp, setSelectedComp] = useState<string>('credit-card')
@@ -1164,28 +1351,21 @@ border-radius: ${borderRadius}px;`
           </div>
 
           {/* Tint Color Picker */}
-          <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 space-y-2">
-            <div className="flex justify-between text-xs font-semibold">
+          <div className="bg-white/[0.02] border border-white/5 rounded-xl p-3 space-y-3">
+            <div className="flex justify-between text-xs font-semibold mb-1">
               <span className="text-white/70">Glass Tint Color</span>
               <span className="text-white/50 font-mono uppercase">{tintColor}</span>
             </div>
-            <div className="flex space-x-3 items-center">
-              <div 
-                className="relative w-9 h-7 rounded border border-white/15 overflow-hidden cursor-pointer flex-shrink-0 shadow-inner"
-                style={{ backgroundColor: tintColor }}
-                title="Select Custom Tint Color"
-              >
-                <input
-                  type="color"
-                  value={tintColor}
-                  onChange={(e) => setTintColor(e.target.value)}
-                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer p-0 border-0"
-                />
-              </div>
+            
+            <InlineColorPicker color={tintColor} onChange={setTintColor} />
+
+            <div className="flex gap-2 items-center border-t border-white/5 pt-2 mt-1">
+              <span className="text-[9px] text-white/35 font-semibold uppercase">Presets</span>
               <div className="flex-1 flex gap-1.5 items-center overflow-x-auto">
                 {['#ffffff', '#3b82f6', '#ec4899', '#10b981', '#f59e0b', '#8b5cf6'].map((color) => (
                   <button
                     key={color}
+                    type="button"
                     onClick={() => setTintColor(color)}
                     className={`w-5.5 h-5.5 rounded-full border transition-transform ${
                       tintColor === color ? 'border-white scale-110 shadow-md' : 'border-transparent scale-100 hover:scale-105'
@@ -1333,26 +1513,19 @@ border-radius: ${borderRadius}px;`
                 <span className="text-white/70">Shadow Color</span>
                 <span className="text-white/50 font-mono uppercase">{shadowColor}</span>
               </div>
-              <div className="flex space-x-2 items-center">
-                <div 
-                  className="relative w-7 h-7 rounded border border-white/15 overflow-hidden cursor-pointer flex-shrink-0 shadow-inner"
-                  style={{ backgroundColor: shadowColor }}
-                  title="Select Custom Shadow Color"
-                >
-                  <input
-                    type="color"
-                    value={shadowColor}
-                    onChange={(e) => setShadowColor(e.target.value)}
-                    className="absolute inset-0 opacity-0 w-full h-full cursor-pointer p-0 border-0"
-                  />
-                </div>
-                <div className="flex gap-1.5 items-center">
+
+              <InlineColorPicker color={shadowColor} onChange={setShadowColor} />
+
+              <div className="flex gap-2 items-center border-t border-white/5 pt-2 mt-2">
+                <span className="text-[9px] text-white/35 font-semibold uppercase">Presets</span>
+                <div className="flex-1 flex gap-1.5 items-center overflow-x-auto">
                   {['#000000', '#1e1b4b', '#4c0519', '#022c22'].map((color) => (
                     <button
                       key={color}
+                      type="button"
                       onClick={() => setShadowColor(color)}
-                      className={`w-5 h-5 rounded-full border transition-transform ${
-                        shadowColor === color ? 'border-white scale-110' : 'border-transparent'
+                      className={`w-5.5 h-5.5 rounded-full border transition-transform ${
+                        shadowColor === color ? 'border-white scale-110 shadow-md' : 'border-transparent scale-100 hover:scale-105'
                       }`}
                       style={{ backgroundColor: color }}
                     />
