@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Sparkles, Info, AlertTriangle, CheckCircle, Copy, Check, ChevronDown, ChevronUp } from 'lucide-react'
+import Footer from '@/components/Footer'
 
 export default function Docs() {
   const [copiedSection, setCopiedSection] = useState<string | null>(null)
@@ -327,6 +328,7 @@ export const GlassBox = styled.div\`
         </section>
 
       </main>
+      <Footer />
     </div>
   )
 }

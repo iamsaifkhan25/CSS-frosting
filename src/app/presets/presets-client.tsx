@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase-client'
 import AuthModal from '@/components/AuthModal'
+import Footer from '@/components/Footer'
 import { 
   Sparkles, Lock, CreditCard, Smartphone, LayoutGrid, 
   CheckCircle, RefreshCw, Paintbrush, Copy, Check 
@@ -579,6 +580,7 @@ export default function Presets() {
         onClose={() => setAuthModalOpen(false)}
         onAuthSuccess={fetchUserAndPurchases}
       />
+      <Footer />
     </div>
   )
 }

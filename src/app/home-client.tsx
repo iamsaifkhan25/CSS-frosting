@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Paintbrush, LayoutGrid, Sparkles, Code, Zap, ChevronRight, BookOpen, Layers } from 'lucide-react'
+import Footer from '@/components/Footer'
 
 export default function HomeClient() {
   const [coords, setCoords] = useState({ x: 0, y: 0 })
@@ -306,9 +307,7 @@ export default function HomeClient() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full border-t border-white/5 py-8 text-center text-[10px] text-white/30 tracking-wider font-semibold uppercase relative z-10 px-6">
-        <span>© 2026 CSS Frosting • Crafted by Open Source Code</span>
-      </footer>
+      <Footer />
     </div>
   )
 }
