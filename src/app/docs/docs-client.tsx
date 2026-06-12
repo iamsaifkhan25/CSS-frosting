@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Sparkles, Info, AlertTriangle, CheckCircle, Copy, Check } from 'lucide-react'
+import { Sparkles, Info, AlertTriangle, CheckCircle, Copy, Check, ChevronDown, ChevronUp } from 'lucide-react'
 
 export default function Docs() {
   const [copiedSection, setCopiedSection] = useState<string | null>(null)
@@ -36,6 +36,43 @@ export const GlassBox = styled.div\`
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
   border-radius: 12px;
 \`;`
+
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
+
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index)
+  }
+
+  const faqs = [
+    {
+      q: "What makes this glassmorphism generator different from basic alternatives like CSS.glass?",
+      a: "Unlike basic platforms such as CSS.glass which restrict your preview canvas to a single static rectangle, our workspace features an interactive multi-component design playground. Developers can instantly toggle their layouts to preview how frosted styling renders on dynamic dashboard sidebars, layered credit card grids, mock application windows, and responsive checkout components. Additionally, this utility lets you inspect multi-layer lighting variables and border highlight specular maps in real-time. By supporting dynamic DOM injection and multi-variant component canvas views, it bridges the gap between basic visual sandboxes and complex production-ready interfaces."
+    },
+    {
+      q: "Why is my backdrop-filter blur effect not rendering properly in Mozilla Firefox or older mobile browsers?",
+      a: "The backdrop-filter property is dependent on modern GPU rendering pipelines, which are disabled by default in certain browsers. In Mozilla Firefox, you must manually enable the feature flag by navigating to about:config and toggling layout.css.backdrop-filter.enabled to true. Furthermore, older WebKit-based browsers like Safari and iOS Chrome require the legacy -webkit-backdrop-filter vendor prefix to trigger composition layering. To guarantee a high-quality user experience across all devices, we recommend implementing a solid or semi-transparent fallback background-color style ruleset inside a feature query block using CSS @supports declarations."
+    },
+    {
+      q: "Can I export these translucent styling layouts directly into modern utility frameworks like Tailwind CSS, React, or Styled-Components?",
+      a: "Yes, our translucent element code exporter provides complete multi-framework export compatibility. With a single click, you can extract clean vanilla CSS sheets, inline React style objects, modular Styled-Components wrapper templates, or Tailwind CSS v4 custom class utility combinations. The generator automatically resolves alpha color variables and formats standard shadows into framework-compliant syntax. This ensures frontend developers can drop the exported properties directly into production configurations without requiring manual syntax translation or style refactoring."
+    },
+    {
+      q: "How does the glassmorphic rendering engine affect web application performance and page rendering speeds?",
+      a: "Using the CSS backdrop-filter property forces the browser to create a new graphics composition layer, offloading filter calculations to the hardware-accelerated GPU. While this provides exceptionally smooth rendering, applying large blurs to multiple overlapping DOM elements can degrade layout performance and cause frame rate drops, especially on mobile devices. To optimize rendering efficiency, we recommend limiting the number of active blurred panels on a single viewport and applying will-change: transform to promote elements to their own compositing layers. This approach minimizes paint operations and prevents sluggish page scrolls."
+    },
+    {
+      q: "How safe and secure is the payment gateway for upgrading to premium preset templates?",
+      a: "Our payment processing infrastructure is built to guarantee the highest level of security for transactions. We integrate directly with industry-leading, PCI-DSS Level 1 compliant payment gateways, including Stripe and Razorpay, to process all premium upgrades. Your credit card credentials and sensitive payment data are encrypted on the client-side and never touch or store on our application servers. All checkout sessions employ 3D Secure verification protocols and end-to-end tokenization to prevent unauthorized transactions. This architecture ensures developers and companies can purchase premium assets with complete trust and security."
+    },
+    {
+      q: "Are the premium UI component templates purchased from this platform covered under a commercial usage license?",
+      a: "Yes, all UI component presets and layouts exported from our platform include a comprehensive commercial usage license. This lifetime, royalty-free license grants you full permission to utilize, modify, and distribute the styling codes in personal, freelance, and corporate client production environments. There are no restrictions on the number of client sites you can deploy or the commercial revenue generated by apps using these elements. However, reselling our templates as standalone visual assets or repackaging them in competing UI libraries is strictly prohibited."
+    },
+    {
+      q: "Do I need to create an account or sign in to use the core configuration utilities?",
+      a: "Creating an account is entirely optional, as the core configuration sliders and vanilla CSS code exporters are 100% free and open to all visitors without any registration wall. We prioritize friction-free developer onboarding, allowing you to design and export standard CSS classes without sharing any personal information. Registration is required exclusively for saving customized preset dashboards, tracking transaction histories, and syncing unlocked premium layout components across multiple machines. Authenticating with your credentials simply links your settings to a secure backend cloud profile for cross-device persistence."
+    }
+  ]
 
   return (
     <div className="flex-1 bg-[#0a0a0a] text-white flex flex-col relative select-none">
@@ -212,6 +249,41 @@ export const GlassBox = styled.div\`
             <li>Add <code className="font-mono bg-white/5 px-1 py-0.5 rounded text-blue-300">suppressHydrationWarning</code> on your root HTML tag.</li>
             <li>Initialize any dynamic parameters that rely on client measurements (like <code className="font-mono text-blue-300">window.innerWidth</code>) inside a <code className="font-mono text-blue-300">useEffect</code> block, and set them to states instead of rendering them directly in the markup.</li>
           </ul>
+        </section>
+
+        {/* Section: FAQ */}
+        <section className="space-y-6 border-t border-white/5 pt-12">
+          <div className="space-y-2">
+            <h3 className="text-xl font-bold text-white">Frequently Asked Questions</h3>
+            <p className="text-xs text-white/55">
+              Get detailed technical answers to frontend rendering, performance, and usage licensing questions.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, index) => {
+              const isOpen = openFaq === index
+              return (
+                <div 
+                  key={index}
+                  className="border border-white/5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.02] transition-all duration-300"
+                >
+                  <button
+                    onClick={() => toggleFaq(index)}
+                    className="w-full text-left p-5 flex items-center justify-between font-bold text-sm text-white/90 hover:text-white"
+                  >
+                    <span>{faq.q}</span>
+                    {isOpen ? <ChevronUp className="w-4 h-4 text-purple-400" /> : <ChevronDown className="w-4 h-4 text-white/40" />}
+                  </button>
+                  {isOpen && (
+                    <div className="p-5 pt-0 border-t border-white/5 text-xs md:text-sm text-white/60 leading-relaxed animate-in fade-in slide-in-from-top-2 duration-200 select-text">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
         </section>
 
       </main>
