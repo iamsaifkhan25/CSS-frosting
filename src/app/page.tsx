@@ -2,16 +2,16 @@ import type { Metadata } from 'next'
 import HomeClient from './home-client'
 
 export const metadata: Metadata = {
-  title: "CSS Glassmorphic Generator | Premium Frosted UI Exporter",
-  description: "Generate high-performance CSS glassmorphism code natively in your browser. Customize alpha channels, shadows, and backdrop-filter blurs with our real-time DOM-based generator.",
+  title: "CSS Glassmorphic & Gradient Generator | Real-Time UI Exporter",
+  description: "Generate high-performance frosted glass styles and translucent layouts with our free CSS generator. Customize background alpha channels, shadows, gradients, and blurs.",
   alternates: {
     canonical: 'https://cssfrosting.com',
   },
   openGraph: {
     type: 'website',
     url: 'https://cssfrosting.com',
-    title: 'CSS Glassmorphic Generator | Premium Frosted UI Exporter',
-    description: 'Generate high-performance CSS glassmorphism code natively in your browser. Customize alpha channels, shadows, and backdrop-filter blurs with our real-time DOM-based generator.',
+    title: 'CSS Glassmorphic & Gradient Generator | Real-Time UI Exporter',
+    description: 'Generate high-performance frosted glass styles and translucent layouts with our free CSS generator. Customize background alpha channels, shadows, gradients, and blurs.',
     images: [
       {
         url: 'https://cssfrosting.com/og-image.png',
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CSS Glassmorphic Generator | Premium Frosted UI Exporter',
-    description: 'Generate high-performance CSS glassmorphism code natively in your browser. Customize alpha channels, shadows, and backdrop-filter blurs with our real-time DOM-based generator.',
+    title: 'CSS Glassmorphic & Gradient Generator | Real-Time UI Exporter',
+    description: 'Generate high-performance frosted glass styles and translucent layouts with our free CSS generator. Customize background alpha channels, shadows, gradients, and blurs.',
     images: ['https://cssfrosting.com/og-image.png'],
   }
 }

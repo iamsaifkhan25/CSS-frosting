@@ -245,7 +245,7 @@ export default function HomeClient() {
               CSS Glassmorphic Generator: The Definitive Engine for Modern Frosted Interfaces
             </h1>
             <p className="mt-6 text-sm md:text-base text-white/60 leading-relaxed">
-              In the fast-evolving landscape of modern web design, creating sleek, premium user interfaces requires tools that prioritize developer efficiency and pixel-perfect accuracy. Our next-generation web app introduces an advanced <strong>css glassmorphic generator</strong> designed to streamline your frontend workflow. Built specifically for developers who demand high performance and clean output, this dev utility operates as a premier <strong>glassmorphism CSS generator</strong> that enables engineers to create, tweak, and implement sophisticated translucent components with ease. By bridging the gap between visual styling and clean output, it ensures your next-generation ui and ux architectures remain lightweight and highly performant.
+              In the fast-evolving landscape of modern web design, creating sleek, premium user interfaces requires tools that prioritize developer efficiency and pixel-perfect accuracy. Our next-generation web app introduces an advanced <strong>css glassmorphic generator</strong> designed to streamline your frontend workflow. Built specifically for developers who demand high performance and clean output, this dev utility operates as a premier <strong>glassmorphism CSS generator</strong> and all-in-one <strong>css generator</strong> that enables engineers to create, tweak, and implement sophisticated translucent components with ease. By bridging the gap between visual styling and clean output, it ensures your next-generation ui and ux architectures remain lightweight and highly performant.
             </p>
           </div>
 
@@ -284,7 +284,7 @@ export default function HomeClient() {
                 As visual trends transition into 2026, styling paradigms are shifting from simple blurred boxes to complex <strong>UX-driven glassmorphism</strong>. Modern interfaces use depth to establish content hierarchy rather than simple aesthetic decoration. Furthermore, our editor supports experimental designs like the <strong>liquid glass UI effect</strong>, introducing complex refraction layers and specular gradients that mimic real glass behaviors under varying light sources.
               </p>
               <p>
-                With our tool, you are not limited to basic containers. You can craft a highly customized <strong>responsive glass card CSS</strong> definition, fine-tune border-image gradients to simulate specular edge highlights, and extract variables directly for your styling system.
+                With our tool, you are not limited to basic containers. You can craft a highly customized <strong>responsive glass card CSS</strong> definition, fine-tune border-image gradients to simulate specular edge highlights, and extract variables directly for your styling system. By utilizing our integrated <strong>gradient css generator</strong>, developers can seamlessly blend background linear gradient alpha colors with specular borders to create incredibly realistic effects.
               </p>
             </div>
 
