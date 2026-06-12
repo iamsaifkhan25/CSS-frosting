@@ -1,11 +1,21 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "css-frosting",
+  "main": ".open-next/worker.js",
   "compatibility_date": "2026-06-12",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": ".open-next/assets"
+  },
   "observability": {
     "enabled": true
   },
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://aggeyfqtuvghqgkodooz.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFnZ2V5ZnF0dXZnaHFna29kb296Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExOTQyNTksImV4cCI6MjA5Njc3MDI1OX0.7K6lKmRng1hc_MUko6ELVjGY6APO8PpBv-VZx-Lghxg",
+    "NEXT_PUBLIC_RAZORPAY_KEY_ID": "rzp_live_T0Nw1fEYYo8OtR",
+    "NEXT_PUBLIC_APP_URL": "http://localhost:3000"
+  }
 }
