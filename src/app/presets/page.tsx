@@ -418,7 +418,7 @@ export default function Presets() {
         )}
 
         {/* Presets Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="flex flex-row overflow-x-auto gap-6 pb-6 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:pb-0 scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {filteredPresets.map((preset) => {
             const Icon = preset.icon
             const isLocked = isPremiumLocked(preset.id)
@@ -428,7 +428,7 @@ export default function Presets() {
             return (
               <div 
                 key={preset.id}
-                className="bg-white/[0.01] hover:bg-white/[0.02] border border-white/5 hover:border-white/15 rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 group shadow-lg hover:shadow-2xl"
+                className="w-[280px] sm:w-[320px] md:w-auto shrink-0 snap-start bg-white/[0.01] hover:bg-white/[0.02] border border-white/5 hover:border-white/15 rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 group shadow-lg hover:shadow-2xl"
               >
                 {/* Visual Preview Box */}
                 <div className="aspect-[1.5] relative overflow-hidden bg-[#121212] flex items-center justify-center p-6 border-b border-white/5">
