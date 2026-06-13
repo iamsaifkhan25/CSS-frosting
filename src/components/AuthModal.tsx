@@ -11,7 +11,7 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
-  const [isSignUp, setIsSignUp] = useState(false)
+  const [mode, setMode] = useState<'signin' | 'signup' | 'forgot'>('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -29,7 +29,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
     const supabase = createClient()
 
     try {
-      if (isSignUp) {
+      if (mode === 'signup') {
         const { error: signUpError } = await supabase.auth.signUp({
           email,
           password,
@@ -39,7 +39,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
         })
         if (signUpError) throw signUpError
         setMessage('Check your email for the confirmation link.')
-      } else {
+      } else if (mode === 'signin') {
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -47,12 +47,25 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
         if (signInError) throw signInError
         onAuthSuccess()
         onClose()
+      } else if (mode === 'forgot') {
+        const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset-password`,
+        })
+        if (resetError) throw resetError
+        setMessage('Password reset link sent! Please check your email inbox.')
       }
-    } catch (err: any) {
-      setError(err.message || 'An error occurred during authentication.')
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : 'An error occurred during authentication.'
+      setError(errMsg)
     } finally {
       setLoading(false)
     }
+  }
+
+  const getTitle = () => {
+    if (mode === 'signup') return 'Create account'
+    if (mode === 'forgot') return 'Reset Password'
+    return 'Sign in'
   }
 
   return (
@@ -75,7 +88,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
             </div>
             <div>
               <h2 className="text-xl font-semibold text-white">
-                {isSignUp ? 'Create account' : 'Sign in'}
+                {getTitle()}
               </h2>
               <p className="text-xs text-white/50">Project Vault: Glassmorphism</p>
             </div>
@@ -111,22 +124,39 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-medium text-white/70 mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full bg-black/40 border border-white/10 rounded-lg py-2 px-3 pl-10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/30 transition-colors"
-                />
-                <Lock className="absolute left-3 top-2.5 w-4.5 h-4.5 text-white/30" />
+            {mode !== 'forgot' && (
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-medium text-white/70">
+                    Password
+                  </label>
+                  {mode === 'signin' && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMode('forgot')
+                        setError(null)
+                        setMessage(null)
+                      }}
+                      className="text-xs text-white/40 hover:text-white transition-colors underline"
+                    >
+                      Forgot password?
+                    </button>
+                  )}
+                </div>
+                <div className="relative">
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-black/40 border border-white/10 rounded-lg py-2 px-3 pl-10 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/30 transition-colors"
+                  />
+                  <Lock className="absolute left-3 top-2.5 w-4.5 h-4.5 text-white/30" />
+                </div>
               </div>
-            </div>
+            )}
 
             <button
               type="submit"
@@ -136,23 +166,43 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
-                <span>{isSignUp ? 'Create account' : 'Sign in'}</span>
+                <span>
+                  {mode === 'signup' && 'Create account'}
+                  {mode === 'signin' && 'Sign in'}
+                  {mode === 'forgot' && 'Send Reset Link'}
+                </span>
               )}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setIsSignUp(!isSignUp)
-                setError(null)
-                setMessage(null)
-              }}
-              className="text-xs text-white/55 hover:text-white underline transition-colors"
-            >
-              {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
-            </button>
+          <div className="mt-6 text-center space-y-2">
+            <div>
+              {mode !== 'forgot' ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode(mode === 'signin' ? 'signup' : 'signin')
+                    setError(null)
+                    setMessage(null)
+                  }}
+                  className="text-xs text-white/55 hover:text-white underline transition-colors"
+                >
+                  {mode === 'signup' ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('signin')
+                    setError(null)
+                    setMessage(null)
+                  }}
+                  className="text-xs text-white/55 hover:text-white underline transition-colors"
+                >
+                  Back to Sign in
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
