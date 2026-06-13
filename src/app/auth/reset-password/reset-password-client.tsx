@@ -11,18 +11,45 @@ export default function ResetPasswordClient() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [sessionChecked, setSessionChecked] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
   // Verify that the user has a valid active session (established by the callback redirect)
   useEffect(() => {
+    let active = true
+    let subscription: { unsubscribe: () => void } | null = null
+
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        setError('No active password reset session found. Please request a new reset link.')
+      if (!active) return
+
+      if (session) {
+        setError(null)
+        setSessionChecked(true)
+      } else {
+        // Listen to auth state changes in case the client is currently parsing the redirected URL tokens
+        const { data } = supabase.auth.onAuthStateChange((event, session) => {
+          if (!active) return
+          if (session) {
+            setError(null)
+          } else {
+            setError('No active password reset session found. Please request a new reset link.')
+          }
+          setSessionChecked(true)
+        })
+        subscription = data.subscription
       }
     }
+
     checkSession()
+
+    return () => {
+      active = false
+      if (subscription) {
+        subscription.unsubscribe()
+      }
+    }
   }, [supabase])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,6 +83,14 @@ export default function ResetPasswordClient() {
     } finally {
       setLoading(false)
     }
+  }
+
+  if (!sessionChecked && !error) {
+    return (
+      <div className="flex-1 flex items-center justify-center p-6 bg-[#0a0a0a] min-h-[calc(100vh-4rem)] relative">
+        <Loader2 className="w-8 h-8 animate-spin text-white/50" />
+      </div>
+    )
   }
 
   return (

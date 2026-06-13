@@ -49,7 +49,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
         onClose()
       } else if (mode === 'forgot') {
         const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset-password`,
+          redirectTo: `${window.location.origin}/auth/reset-password`,
         })
         if (resetError) throw resetError
         setMessage('Password reset link sent! Please check your email inbox.')
