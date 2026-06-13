@@ -15,6 +15,9 @@ export default function Navbar() {
   const pathname = usePathname()
   const supabase = createClient()
 
+  // Keep verifier page indicator active for 30 days (June 14 to July 14, 2026)
+  const showNewIndicator = new Date() < new Date('2026-07-14')
+
   const fetchUser = async () => {
     setLoadingUser(true)
     const { data: { session } } = await supabase.auth.getSession()
@@ -46,6 +49,7 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Generator', href: '/generator', icon: Paintbrush },
     { name: 'Presets', href: '/presets', icon: LayoutGrid },
+    { name: 'Glass Analyzer', href: '/analyzer', icon: Sparkles },
     { name: 'Documentation', href: '/docs', icon: BookOpen },
   ]
 
@@ -62,7 +66,7 @@ export default function Navbar() {
               <h1 className="font-bold text-sm tracking-wider text-white flex items-center uppercase">
                 CSS Frosting
                 <span className="mx-2 text-white/30 font-normal">|</span>
-                <span className="text-white/60 font-medium lowercase text-xs tracking-normal">v1.0</span>
+                <span className="text-white/60 font-medium lowercase text-xs tracking-normal">v2.0</span>
               </h1>
             </div>
           </Link>
@@ -87,6 +91,11 @@ export default function Navbar() {
                 <span>{link.name}</span>
                 {link.name === 'Presets' && (
                   <span className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(250,204,21,0.6)]"></span>
+                )}
+                {link.name === 'Glass Analyzer' && showNewIndicator && (
+                  <span className="bg-purple-500 text-white text-[7px] font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wider ml-1 shadow-[0_0_8px_rgba(168,85,247,0.4)]">
+                    New
+                  </span>
                 )}
               </Link>
             )
@@ -154,6 +163,11 @@ export default function Navbar() {
                   <span>{link.name}</span>
                   {link.name === 'Presets' && (
                     <span className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(250,204,21,0.6)]"></span>
+                  )}
+                  {link.name === 'Glass Analyzer' && showNewIndicator && (
+                    <span className="bg-purple-500 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wider ml-auto shadow-[0_0_8px_rgba(168,85,247,0.4)]">
+                      New
+                    </span>
                   )}
                 </Link>
               )

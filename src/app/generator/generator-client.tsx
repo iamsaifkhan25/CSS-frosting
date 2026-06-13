@@ -401,7 +401,7 @@ box-shadow: 0 8px 32px 0 rgba(${shadowRgb.r}, ${shadowRgb.g}, ${shadowRgb.b}, ${
 border-radius: ${borderRadius}px;`
 
   const tailwindCodeString = premiumCss 
-    ? `/* Customized premium layout classes */` 
+    ? convertCssToTailwind(premiumCss) 
     : `bg-[rgba(${rgb.r},${rgb.g},${rgb.b},${bgOpacity})] backdrop-blur-[${blurRadius}px] backdrop-saturate-[${saturate}%] border-[${borderWidth}px] border-[rgba(${rgb.r},${rgb.g},${rgb.b},${borderOpacity})] shadow-[0_8px_32px_0_rgba(${shadowRgb.r},${shadowRgb.g},${shadowRgb.b},${shadowOpacity/100})] rounded-[${borderRadius}px]`
 
   const styledComponentsCodeString = `const GlassmorphicBox = styled.div\`
@@ -501,7 +501,7 @@ border-radius: ${borderRadius}px;`
   }
 
   const isPremiumLocked = (id: string) => {
-    if (purchases.includes('glass-premium-all-access')) return false
+    if (purchases.includes('glass-premium-all-access') || purchases.includes('glass-mega-bundle')) return false
     return id.startsWith('glass-premium-') && !purchases.includes(id)
   }
 
@@ -525,6 +525,71 @@ border-radius: ${borderRadius}px;`
       else if (property === 'background-image') styles.backgroundImage = value
     })
     return styles
+  }
+
+  // Convert custom CSS into Tailwind classes
+  function convertCssToTailwind(cssString: string): string {
+    const classes: string[] = []
+    cssString.split('\n').forEach((line) => {
+      const cleanLine = line.trim()
+      if (!cleanLine || cleanLine.startsWith('/*') || cleanLine.startsWith('//')) return
+      const delimiterIndex = cleanLine.indexOf(':')
+      if (delimiterIndex === -1) return
+      const property = cleanLine.substring(0, delimiterIndex).trim()
+      const value = cleanLine.substring(delimiterIndex + 1).replace(';', '').trim()
+
+      const formatArbitraryValue = (val: string) => {
+        return val.replace(/\s+/g, '_')
+      }
+
+      if (property === 'background' || property === 'background-color') {
+        classes.push(`bg-[${formatArbitraryValue(value)}]`)
+      }
+      else if (property === 'backdrop-filter' || property === '-webkit-backdrop-filter') {
+        const blurMatch = value.match(/blur\(([^)]+)\)/)
+        if (blurMatch && blurMatch[1]) {
+          const blurVal = blurMatch[1].trim()
+          const cls = `backdrop-blur-[${blurVal}]`
+          if (!classes.includes(cls)) classes.push(cls)
+        }
+        const satMatch = value.match(/saturate\(([^)]+)\)/)
+        if (satMatch && satMatch[1]) {
+          const satVal = satMatch[1].trim()
+          const cls = `backdrop-saturate-[${satVal}]`
+          if (!classes.includes(cls)) classes.push(cls)
+        }
+      }
+      else if (property === 'border') {
+        const parts = value.split(/\s+/)
+        const width = parts.find(p => p.endsWith('px') || p.endsWith('rem') || p.endsWith('em')) || '1px'
+        const color = parts.filter(p => !['solid', 'dashed', 'dotted', 'double', 'none', width].includes(p)).join('')
+        classes.push('border')
+        classes.push(`border-[${width}]`)
+        if (color) {
+          classes.push(`border-[${formatArbitraryValue(color)}]`)
+        }
+      } else if (property === 'border-width') {
+        classes.push(`border-[${value}]`)
+      } else if (property === 'border-color') {
+        classes.push(`border-[${formatArbitraryValue(value)}]`)
+      } else if (property === 'border-bottom') {
+        const parts = value.split(/\s+/)
+        const width = parts.find(p => p.endsWith('px') || p.endsWith('rem')) || '1px'
+        const color = parts.filter(p => !['solid', width].includes(p)).join('')
+        classes.push('border-b')
+        classes.push(`border-b-[${width}]`)
+        if (color) {
+          classes.push(`border-b-[${formatArbitraryValue(color)}]`)
+        }
+      }
+      else if (property === 'box-shadow') {
+        classes.push(`shadow-[${formatArbitraryValue(value)}]`)
+      }
+      else if (property === 'border-radius') {
+        classes.push(`rounded-[${formatArbitraryValue(value)}]`)
+      }
+    })
+    return classes.join(' ')
   }
 
   // Randomize values for a fresh look

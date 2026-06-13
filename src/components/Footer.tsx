@@ -17,7 +17,7 @@ export default function Footer() {
               <h2 className="font-bold text-sm tracking-wider text-white uppercase flex items-center">
                 CSS Frosting
                 <span className="mx-2 text-white/30 font-normal">|</span>
-                <span className="text-white/60 font-medium lowercase text-xs tracking-normal">v1.0</span>
+                <span className="text-white/60 font-medium lowercase text-xs tracking-normal">v2.0</span>
               </h2>
             </div>
           </Link>
@@ -35,6 +35,9 @@ export default function Footer() {
             </Link>
             <Link href="/presets" className="text-white/60 hover:text-white transition-colors duration-200">
               Premium Presets
+            </Link>
+            <Link href="/analyzer" className="text-white/60 hover:text-white transition-colors duration-200">
+              Glass Analyzer
             </Link>
             <Link href="/docs" className="text-white/60 hover:text-white transition-colors duration-200">
               Developer Docs

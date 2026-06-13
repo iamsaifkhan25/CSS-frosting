@@ -27,7 +27,7 @@ export async function GET(req: Request) {
       .select('*')
       .eq('user_id', user.id)
       .eq('status', 'completed')
-      .in('product_id', [productId, 'glass-premium-all-access'])
+      .in('product_id', [productId, 'glass-premium-all-access', 'glass-mega-bundle'])
       .maybeSingle()
 
     if (purchaseError) {

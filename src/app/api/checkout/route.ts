@@ -31,20 +31,53 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Product not found.' }, { status: 404 })
     }
 
-    // Check if already purchased (specifically checking the product OR the lifetime all-access pass)
-    const { data: existingPurchase } = await adminSupabase
+    // Check if already purchased
+    const { data: userPurchases } = await adminSupabase
       .from('purchases')
-      .select('*')
+      .select('product_id')
       .eq('user_id', user.id)
       .eq('status', 'completed')
-      .in('product_id', [productId, 'glass-premium-all-access'])
-      .maybeSingle()
 
-    if (existingPurchase) {
-      const msg = existingPurchase.product_id === 'glass-premium-all-access'
-        ? 'You already own the Lifetime All-Access Pass (all presets unlocked).'
-        : 'Product already owned.'
-      return NextResponse.json({ error: msg }, { status: 400 })
+    const purchasedIds = userPurchases ? userPurchases.map((p: any) => p.product_id) : []
+
+    let owned = false
+    let errorMsg = 'Product already owned.'
+
+    if (productId === 'glass-analyzer') {
+      if (purchasedIds.includes('glass-analyzer')) {
+        owned = true
+      } else if (purchasedIds.includes('glass-premium-all-access')) {
+        owned = true
+        errorMsg = 'You already own the Lifetime All-Access Pass (which includes the Analyzer).'
+      } else if (purchasedIds.includes('glass-mega-bundle')) {
+        owned = true
+        errorMsg = 'You already own the Ultimate Mega Bundle (which includes the Analyzer).'
+      }
+    } else if (productId === 'glass-premium-all-access') {
+      if (purchasedIds.includes('glass-premium-all-access')) {
+        owned = true
+      } else if (purchasedIds.includes('glass-mega-bundle')) {
+        owned = true
+        errorMsg = 'You already own the Ultimate Mega Bundle (which includes all presets).'
+      }
+    } else if (productId === 'glass-mega-bundle') {
+      if (purchasedIds.includes('glass-mega-bundle')) {
+        owned = true
+      } else if (purchasedIds.includes('glass-premium-all-access')) {
+        owned = true
+        errorMsg = 'You already own the Lifetime All-Access Pass. You can purchase the Glass Analyzer separately.'
+      }
+    } else {
+      if (purchasedIds.includes(productId)) {
+        owned = true
+      } else if (purchasedIds.includes('glass-premium-all-access') || purchasedIds.includes('glass-mega-bundle')) {
+        owned = true
+        errorMsg = 'You already own the Lifetime All-Access Pass (all presets unlocked).'
+      }
+    }
+
+    if (owned) {
+      return NextResponse.json({ error: errorMsg }, { status: 400 })
     }
 
     // Create Razorpay Order

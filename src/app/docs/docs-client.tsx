@@ -72,6 +72,14 @@ export const GlassBox = styled.div\`
     {
       q: "Do I need to create an account or sign in to use the core configuration utilities?",
       a: "Creating an account is entirely optional, as the core configuration sliders and vanilla CSS code exporters are 100% free and open to all visitors without any registration wall. We prioritize friction-free developer onboarding, allowing you to design and export standard CSS classes without sharing any personal information. Registration is required exclusively for saving customized preset dashboards, tracking transaction histories, and syncing unlocked premium layout components across multiple machines. Authenticating with your credentials simply links your settings to a secure backend cloud profile for cross-device persistence."
+    },
+    {
+      q: "What is the Glassmorphism Code Analyzer and how does it evaluate custom styles?",
+      a: "The Glassmorphism Code Analyzer is a diagnostic tool that parses your custom CSS rules, Tailwind utility classes, or styled-components layouts. It analyzes the style parameters for key features of glassmorphism—specifically looking for background transparency values (between 0.05 and 0.40 opacity), active backdrop-filter blur definitions, high-specular subtle border overlays, and elevation shadows. It awards a percentage score based on compliance, outlines missing attributes, and displays a live preview render of your code in action."
+    },
+    {
+      q: "What are the pricing options for the Glass Analyzer and the Ultimate Mega Bundle?",
+      a: "To support ongoing development, the Glass Analyzer is free for a limited-time 180-day trial. Once the trial expires, you can unlock lifetime unlimited usage of the Analyzer for a standalone fee of $9.99 USD. Alternatively, you can purchase the Ultimate Mega Bundle for $71.99 USD (saving 10% over buying individual packages), which unlocks lifetime access to both the premium presets bundle ($69.99 value) and the Glass Analyzer pass."
     }
   ]
 
@@ -290,6 +298,57 @@ export const GlassBox = styled.div\`
             <li>Add <code className="font-mono bg-white/5 px-1 py-0.5 rounded text-blue-300">suppressHydrationWarning</code> on your root HTML tag.</li>
             <li>Initialize any dynamic parameters that rely on client measurements (like <code className="font-mono text-blue-300">window.innerWidth</code>) inside a <code className="font-mono text-blue-300">useEffect</code> block, and set them to states instead of rendering them directly in the markup.</li>
           </ul>
+        </section>
+
+        {/* Section: Glassmorphism Code Analyzer */}
+        <section className="space-y-4 border-t border-white/5 pt-12">
+          <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+            <Sparkles className="w-5 h-5 text-purple-400" />
+            <span>Glassmorphism Code Analyzer & Verifier</span>
+          </h3>
+          <p className="text-xs md:text-sm text-white/60 leading-relaxed">
+            The <strong>Glass Analyzer</strong> is a diagnostic tool that scans and validates custom code inputs (CSS rules, Tailwind utility classes, or styled-components templates) to assess their compliance with glassmorphism design principles. It parses the styling properties and runs them against key architectural rules:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 space-y-2">
+              <h4 className="text-xs font-bold text-purple-400 uppercase tracking-wider">1. Alpha Transparency Check</h4>
+              <p className="text-xs text-white/50 leading-relaxed">
+                Verifies if a semi-transparent background color (such as <code className="text-[10px] font-mono text-purple-300">rgba()</code> or <code className="text-[10px] font-mono text-purple-300">hsla()</code>) is declared. Glass layers require moderate opacity values between <code className="text-[10px] font-mono text-white/80">0.05</code> and <code className="text-[10px] font-mono text-white/80">0.40</code> to blend with background visuals.
+              </p>
+            </div>
+            
+            <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 space-y-2">
+              <h4 className="text-xs font-bold text-purple-400 uppercase tracking-wider">2. Backdrop Blur Check</h4>
+              <p className="text-xs text-white/50 leading-relaxed">
+                Scans for active <code className="text-[10px] font-mono text-purple-300">backdrop-filter: blur(...)</code> properties. Blurs are essential to create depth and readability by diffusing colors of the background layer.
+              </p>
+            </div>
+
+            <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 space-y-2">
+              <h4 className="text-xs font-bold text-purple-400 uppercase tracking-wider">3. Refraction Border Check</h4>
+              <p className="text-xs text-white/50 leading-relaxed">
+                Inspects border style declarations. Real glass panels have highlighted outer borders simulating light refraction. The analyzer checks for low-opacity border strokes (typically <code className="text-[10px] font-mono text-purple-300">rgba(255,255,255,0.1)</code> to <code className="text-[10px] font-mono text-purple-300">0.3</code>).
+              </p>
+            </div>
+
+            <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 space-y-2">
+              <h4 className="text-xs font-bold text-purple-400 uppercase tracking-wider">4. Contrast Shadow Check</h4>
+              <p className="text-xs text-white/50 leading-relaxed">
+                Examines drop shadow and elevation declarations. Specifying outer shadows (<code className="text-[10px] font-mono text-purple-300">box-shadow</code>) helps elevate glass panels from their backgrounds, creating clear separation.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-purple-950/20 border border-purple-500/25 rounded-2xl p-5 space-y-3">
+            <h4 className="text-sm font-bold text-purple-400 flex items-center space-x-2">
+              <Info className="w-4 h-4" />
+              <span>Free Beta Trial & All-Access Upgrade</span>
+            </h4>
+            <p className="text-xs text-white/70 leading-relaxed">
+              The Glassmorphism Code Analyzer includes a <strong>Free 180-day Beta Trial</strong>. After the trial period expires, full analysis capabilities require upgrading to either the standalone <strong>Glass Analyzer Pass ($9.99 USD)</strong> or the discounted <strong>Ultimate Mega Bundle ($71.99 USD)</strong>. Unlocked accounts can analyze unlimited blocks of code, utilize real-time render preview components, and copy optimized translations instantly.
+            </p>
+          </div>
         </section>
 
         {/* Section: FAQ */}
