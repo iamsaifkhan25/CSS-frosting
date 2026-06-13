@@ -28,6 +28,9 @@ export default function Navbar() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null)
       setLoadingUser(false)
+      if (event === 'PASSWORD_RECOVERY') {
+        window.location.href = '/auth/reset-password'
+      }
     })
 
     return () => {
