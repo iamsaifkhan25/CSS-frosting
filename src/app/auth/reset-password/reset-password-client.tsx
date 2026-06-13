@@ -21,6 +21,28 @@ export default function ResetPasswordClient() {
     let subscription: { unsubscribe: () => void } | null = null
 
     const checkSession = async () => {
+      // 1. Check if there is a 'code' query parameter in the URL (PKCE flow)
+      const urlParams = new URLSearchParams(window.location.search)
+      const code = urlParams.get('code')
+
+      if (code) {
+        try {
+          const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+          if (exchangeError) throw exchangeError
+          
+          // Clean the code query param from the URL to prevent reuse or browser history pollution
+          const cleanUrl = window.location.pathname
+          window.history.replaceState({}, document.title, cleanUrl)
+        } catch {
+          if (active) {
+            setError('Failed to verify reset link. It may have expired or already been used.')
+            setSessionChecked(true)
+            return
+          }
+        }
+      }
+
+      // 2. Query session
       const { data: { session } } = await supabase.auth.getSession()
       if (!active) return
 
@@ -28,7 +50,7 @@ export default function ResetPasswordClient() {
         setError(null)
         setSessionChecked(true)
       } else {
-        // Listen to auth state changes in case the client is currently parsing the redirected URL tokens
+        // Listen to auth state changes in case the client is currently parsing hash tokens (implicit flow)
         const { data } = supabase.auth.onAuthStateChange((event, session) => {
           if (!active) return
           if (session) {
