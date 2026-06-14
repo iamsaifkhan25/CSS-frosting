@@ -81,6 +81,7 @@ export default function AnalyzerClient() {
   const [canvasBg, setCanvasBg] = useState<'aurora' | 'sunset' | 'ocean' | 'cyberpunk'>('aurora')
   const [copied, setCopied] = useState(false)
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null)
+  const [editorHeight, setEditorHeight] = useState(280)
 
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [isFreePeriodActive, setIsFreePeriodActive] = useState(true)
@@ -860,7 +861,7 @@ export default function AnalyzerClient() {
               </div>
 
               {/* Text Area Input */}
-              <div className="relative h-[220px]">
+              <div className="relative" style={{ height: `${editorHeight}px` }}>
                 <textarea
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
@@ -873,6 +874,21 @@ export default function AnalyzerClient() {
                   }
                   className="w-full h-full bg-transparent text-white/90 px-5 pt-5 pb-16 font-mono text-xs focus:outline-none resize-none overflow-y-auto leading-relaxed"
                 />
+                
+                {/* Height adjustment slider */}
+                <div className="absolute bottom-4 left-4 flex items-center space-x-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg px-2.5 py-1.5 shadow-md">
+                  <Sliders className="w-3.5 h-3.5 text-purple-400" />
+                  <input
+                    type="range"
+                    min="180"
+                    max="600"
+                    value={editorHeight}
+                    onChange={(e) => setEditorHeight(Number(e.target.value))}
+                    className="w-16 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-purple-400 focus:outline-none"
+                    title="Adjust editor height"
+                  />
+                  <span className="text-[9px] font-mono text-white/60 w-8 text-right">{editorHeight}px</span>
+                </div>
                 
                 {/* Float controls */}
                 <div className="absolute bottom-4 right-4 flex items-center space-x-2">
