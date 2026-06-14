@@ -81,7 +81,7 @@ export default function AnalyzerClient() {
   const [canvasBg, setCanvasBg] = useState<'aurora' | 'sunset' | 'ocean' | 'cyberpunk'>('aurora')
   const [copied, setCopied] = useState(false)
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null)
-  const [editorHeight, setEditorHeight] = useState(280)
+  const [editorHeight, setEditorHeight] = useState(120)
 
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [isFreePeriodActive, setIsFreePeriodActive] = useState(true)
@@ -861,7 +861,8 @@ export default function AnalyzerClient() {
               </div>
 
               {/* Text Area Input */}
-              <div className="relative" style={{ height: `${editorHeight}px` }}>
+              {/* Text Area Input Row */}
+              <div className="flex flex-row items-stretch" style={{ height: `${editorHeight}px` }}>
                 <textarea
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
@@ -872,36 +873,43 @@ export default function AnalyzerClient() {
                         ? 'bg-white/10 backdrop-blur-md border border-white/10 shadow-lg'
                         : 'const GlassDiv = styled.div`\n  background: rgba(255, 255, 255, 0.2);\n  backdrop-filter: blur(12px);\n`;'
                   }
-                  className="w-full h-full bg-transparent text-white/90 px-5 pt-5 pb-16 font-mono text-xs focus:outline-none resize-none overflow-y-auto leading-relaxed"
+                  className="flex-1 bg-transparent text-white/90 p-5 font-mono text-xs focus:outline-none resize-none overflow-y-auto leading-relaxed"
                 />
                 
-                {/* Height adjustment slider */}
-                <div className="absolute bottom-4 left-4 flex items-center space-x-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg px-2.5 py-1.5 shadow-md">
-                  <Sliders className="w-3.5 h-3.5 text-purple-400" />
+                {/* Vertical slider on the right side */}
+                <div className="flex flex-col items-center justify-center border-l border-white/5 px-3 bg-black/10">
+                  <span className="text-[8px] font-bold text-white/30 uppercase tracking-widest mb-2 select-none" style={{ writingMode: 'vertical-rl' }}>Height</span>
                   <input
                     type="range"
-                    min="180"
-                    max="600"
+                    min="100"
+                    max="450"
                     value={editorHeight}
                     onChange={(e) => setEditorHeight(Number(e.target.value))}
-                    className="w-16 h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-purple-400 focus:outline-none"
-                    title="Adjust editor height"
+                    style={{ writingMode: 'vertical-lr', direction: 'rtl' }}
+                    className="h-24 w-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-purple-400 focus:outline-none"
+                    title="Slide to adjust height"
                   />
-                  <span className="text-[9px] font-mono text-white/60 w-8 text-right">{editorHeight}px</span>
+                </div>
+              </div>
+
+              {/* Footer controls */}
+              <div className="flex items-center justify-between bg-black/40 border-t border-white/5 px-4 py-3">
+                <div className="flex items-center space-x-1 text-[10px] text-white/40 font-mono">
+                  <span>Height: {editorHeight}px</span>
                 </div>
                 
-                {/* Float controls */}
-                <div className="absolute bottom-4 right-4 flex items-center space-x-2">
+                <div className="flex items-center space-x-2">
                   <button
                     onClick={() => setCode('')}
-                    className="p-2 bg-black/60 hover:bg-black/80 border border-white/10 hover:border-white/20 text-white/60 hover:text-white rounded-lg transition-all text-xs flex items-center space-x-1 cursor-pointer"
+                    className="px-3 py-1.5 bg-black/60 hover:bg-black/85 border border-white/10 hover:border-white/20 text-white/60 hover:text-white rounded-lg transition-all text-xs flex items-center space-x-1.5 cursor-pointer font-sans"
                     title="Clear editor"
                   >
                     <RotateCw className="w-3.5 h-3.5" />
+                    <span>Reset</span>
                   </button>
                   <button
                     onClick={handleCopy}
-                    className="px-3.5 py-2 bg-white text-black hover:bg-white/90 rounded-lg font-bold transition-all text-xs flex items-center space-x-1.5 cursor-pointer shadow-md"
+                    className="px-4 py-1.5 bg-white text-black hover:bg-white/90 rounded-lg font-bold transition-all text-xs flex items-center space-x-1.5 cursor-pointer shadow-md font-sans"
                   >
                     {copied ? (
                       <>
