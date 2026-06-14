@@ -81,7 +81,6 @@ export default function AnalyzerClient() {
   const [canvasBg, setCanvasBg] = useState<'aurora' | 'sunset' | 'ocean' | 'cyberpunk'>('aurora')
   const [copied, setCopied] = useState(false)
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null)
-  const [editorHeight, setEditorHeight] = useState(120)
 
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [isFreePeriodActive, setIsFreePeriodActive] = useState(true)
@@ -833,8 +832,8 @@ export default function AnalyzerClient() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Left Column: Code Editor */}
-          <div className="lg:col-span-6 space-y-6 flex flex-col h-full">
-            <div className="bg-[#111] border border-white/5 rounded-2xl overflow-hidden flex flex-col flex-1 shadow-2xl">
+          <div className="lg:col-span-6 space-y-6 flex flex-col">
+            <div className="bg-[#111] border border-white/5 rounded-2xl overflow-hidden flex flex-col shadow-2xl">
               
               {/* Tab Selector */}
               <div className="flex items-center justify-between bg-black/40 border-b border-white/5 p-4">
@@ -861,8 +860,8 @@ export default function AnalyzerClient() {
               </div>
 
               {/* Text Area Input */}
-              {/* Text Area Input Row */}
-              <div className="flex flex-row items-stretch" style={{ height: `${editorHeight}px` }}>
+              {/* Text Area Input */}
+              <div className="relative border-b border-white/5">
                 <textarea
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
@@ -873,29 +872,15 @@ export default function AnalyzerClient() {
                         ? 'bg-white/10 backdrop-blur-md border border-white/10 shadow-lg'
                         : 'const GlassDiv = styled.div`\n  background: rgba(255, 255, 255, 0.2);\n  backdrop-filter: blur(12px);\n`;'
                   }
-                  className="flex-1 bg-transparent text-white/90 p-5 font-mono text-xs focus:outline-none resize-none overflow-y-auto leading-relaxed"
+                  className="w-full h-[150px] min-h-[100px] max-h-[500px] bg-transparent text-white/90 p-5 font-mono text-xs focus:outline-none resize-y overflow-y-auto leading-relaxed"
                 />
-                
-                {/* Vertical slider on the right side */}
-                <div className="flex flex-col items-center justify-center border-l border-white/5 px-3 bg-black/10">
-                  <span className="text-[8px] font-bold text-white/30 uppercase tracking-widest mb-2 select-none" style={{ writingMode: 'vertical-rl' }}>Height</span>
-                  <input
-                    type="range"
-                    min="100"
-                    max="450"
-                    value={editorHeight}
-                    onChange={(e) => setEditorHeight(Number(e.target.value))}
-                    style={{ writingMode: 'vertical-lr', direction: 'rtl' }}
-                    className="h-24 w-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-purple-400 focus:outline-none"
-                    title="Slide to adjust height"
-                  />
-                </div>
               </div>
 
               {/* Footer controls */}
-              <div className="flex items-center justify-between bg-black/40 border-t border-white/5 px-4 py-3">
-                <div className="flex items-center space-x-1 text-[10px] text-white/40 font-mono">
-                  <span>Height: {editorHeight}px</span>
+              <div className="flex items-center justify-between bg-black/40 px-4 py-3">
+                <div className="flex items-center space-x-1.5 text-[10px] text-white/40 font-sans">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                  <span>Ready for verification</span>
                 </div>
                 
                 <div className="flex items-center space-x-2">
