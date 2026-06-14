@@ -833,10 +833,10 @@ export default function AnalyzerClient() {
           
           {/* Left Column: Code Editor */}
           <div className="lg:col-span-6 space-y-6 flex flex-col">
-            <div className="bg-[#111] border border-white/5 rounded-2xl overflow-hidden flex flex-col shadow-2xl">
+            <div className="bg-[#111] border border-white/5 rounded-2xl flex flex-col shadow-2xl resize-y overflow-hidden h-[250px] min-h-[180px] max-h-[600px]">
               
               {/* Tab Selector */}
-              <div className="flex items-center justify-between bg-black/40 border-b border-white/5 p-4">
+              <div className="flex items-center justify-between bg-black/40 border-b border-white/5 p-4 flex-shrink-0">
                 <div className="flex items-center space-x-1">
                   <Code className="w-4 h-4 text-purple-400 mr-1.5" />
                   <span className="text-xs font-bold uppercase tracking-wider text-white/80">Code Input Syntax</span>
@@ -860,8 +860,7 @@ export default function AnalyzerClient() {
               </div>
 
               {/* Text Area Input */}
-              {/* Text Area Input */}
-              <div className="relative border-b border-white/5">
+              <div className="relative flex-1 min-h-0 border-b border-white/5">
                 <textarea
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
@@ -872,12 +871,12 @@ export default function AnalyzerClient() {
                         ? 'bg-white/10 backdrop-blur-md border border-white/10 shadow-lg'
                         : 'const GlassDiv = styled.div`\n  background: rgba(255, 255, 255, 0.2);\n  backdrop-filter: blur(12px);\n`;'
                   }
-                  className="w-full h-[150px] min-h-[100px] max-h-[500px] bg-transparent text-white/90 p-5 font-mono text-xs focus:outline-none resize-y overflow-y-auto leading-relaxed"
+                  className="w-full h-full bg-transparent text-white/90 p-5 font-mono text-xs focus:outline-none resize-none overflow-y-auto leading-relaxed"
                 />
               </div>
 
               {/* Footer controls */}
-              <div className="flex items-center justify-between bg-black/40 px-4 py-3">
+              <div className="flex items-center justify-between bg-black/40 px-4 py-3 flex-shrink-0">
                 <div className="flex items-center space-x-1.5 text-[10px] text-white/40 font-sans">
                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                   <span>Ready for verification</span>
