@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { FileText, Award, AlertTriangle, ShieldAlert, ArrowLeft } from 'lucide-react'
+import { Award, AlertTriangle, ShieldAlert, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 
@@ -53,7 +53,7 @@ export default function TermsPage() {
             <AlertTriangle className="w-6 h-6 text-pink-400" />
             <h3 className="text-sm font-bold text-white">Disclaimer of Warranty</h3>
             <p className="text-[11px] text-white/55 leading-relaxed">
-              The layout and css styling editor is provided "as is", without warranty of any kind, express or implied.
+              The layout and css styling editor is provided &quot;as is&quot;, without warranty of any kind, express or implied.
             </p>
           </div>
           <div className="bg-white/5 border border-white/10 rounded-xl p-5 flex flex-col space-y-2">
@@ -87,7 +87,7 @@ export default function TermsPage() {
               If you utilize our partner study workspace (Open Study Deck) using your own Google Gemini API keys:
             </p>
             <ul className="list-disc pl-5 space-y-1">
-              <li>You agree that the API key belongs to you and complies with Google's Developer Terms.</li>
+              <li>You agree that the API key belongs to you and complies with Google&apos;s Developer Terms.</li>
               <li>You are solely responsible for all API quotas, rate limiting, and pricing structures incurred directly with Google Cloud.</li>
               <li>We hold no liability for API keys that are deprecated, throttled, or disabled by the model provider.</li>
             </ul>

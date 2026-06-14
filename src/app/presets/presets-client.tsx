@@ -2,19 +2,18 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase-client'
 import AuthModal from '@/components/AuthModal'
 import Footer from '@/components/Footer'
+import type { User as SupabaseUser } from '@supabase/supabase-js'
 import { 
   Sparkles, Lock, CreditCard, Smartphone, LayoutGrid, 
-  CheckCircle, RefreshCw, Paintbrush, Copy, Check 
+  RefreshCw, Paintbrush, Copy, Check 
 } from 'lucide-react'
 
 export default function Presets() {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<SupabaseUser | null>(null)
   const [purchases, setPurchases] = useState<string[]>([])
-  const [loadingUser, setLoadingUser] = useState(true)
   const [purchasingId, setPurchasingId] = useState<string | null>(null)
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [copiedId, setCopiedId] = useState<string | null>(null)
@@ -24,7 +23,6 @@ export default function Presets() {
   const [subscribing, setSubscribing] = useState(false)
 
   const supabase = createClient()
-  const router = useRouter()
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,7 +38,6 @@ export default function Presets() {
   }
 
   const fetchUserAndPurchases = async () => {
-    setLoadingUser(true)
     const { data: { session } } = await supabase.auth.getSession()
     if (session?.user) {
       setUser(session.user)
@@ -51,17 +48,36 @@ export default function Presets() {
         .eq('status', 'completed')
       
       if (!error && userPurchases) {
-        setPurchases(userPurchases.map((p: any) => p.product_id))
+        setPurchases(userPurchases.map((p: { product_id: string }) => p.product_id))
       }
     } else {
       setUser(null)
       setPurchases([])
     }
-    setLoadingUser(false)
   }
 
   useEffect(() => {
-    fetchUserAndPurchases()
+    let active = true
+    const init = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (active) {
+        if (session?.user) {
+          setUser(session.user)
+          const { data: userPurchases, error } = await supabase
+            .from('purchases')
+            .select('product_id')
+            .eq('user_id', session.user.id)
+            .eq('status', 'completed')
+          if (!error && userPurchases) {
+            setPurchases(userPurchases.map((p: { product_id: string }) => p.product_id))
+          }
+        } else {
+          setUser(null)
+          setPurchases([])
+        }
+      }
+    }
+    init()
 
     // Load Razorpay Script
     const script = document.createElement('script')
@@ -80,13 +96,12 @@ export default function Presets() {
             .eq('user_id', session.user.id)
             .eq('status', 'completed')
           if (userPurchases) {
-            setPurchases(userPurchases.map((p: any) => p.product_id))
+            setPurchases(userPurchases.map((p: { product_id: string }) => p.product_id))
           }
         } else {
           setUser(null)
           setPurchases([])
         }
-        setLoadingUser(false)
       }
     )
 
@@ -95,28 +110,33 @@ export default function Presets() {
     const checkoutStatus = query.get('checkout')
 
     if (checkoutStatus === 'success') {
-      setNotification({
-        type: 'success',
-        message: 'Payment verified! Your premium layout is unlocked.',
-      })
+      setTimeout(() => {
+        setNotification({
+          type: 'success',
+          message: 'Payment verified! Your premium layout is unlocked.',
+        })
+      }, 0)
       const newUrl = window.location.pathname
       window.history.replaceState({}, document.title, newUrl)
     } else if (checkoutStatus === 'cancel') {
-      setNotification({
-        type: 'error',
-        message: 'Payment cancelled.',
-      })
+      setTimeout(() => {
+        setNotification({
+          type: 'error',
+          message: 'Payment cancelled.',
+        })
+      }, 0)
       const newUrl = window.location.pathname
       window.history.replaceState({}, document.title, newUrl)
     }
 
     return () => {
+      active = false
       subscription.unsubscribe()
       if (document.body.contains(script)) {
         document.body.removeChild(script)
       }
     }
-  }, [])
+  }, [supabase])
 
   const handlePurchase = async (productId: string) => {
     if (!user) {
@@ -141,7 +161,11 @@ export default function Presets() {
           name: 'CSS Frosting Store',
           description: 'Unlock Premium Layout',
           order_id: data.orderId,
-          handler: async function (response: any) {
+          handler: async function (response: {
+            razorpay_order_id: string
+            razorpay_payment_id: string
+            razorpay_signature: string
+          }) {
             setPurchasingId(productId)
             try {
               const verifyRes = await fetch('/api/verify', {
@@ -167,11 +191,11 @@ export default function Presets() {
                   message: verifyData.error || 'Verification failed.',
                 })
               }
-            } catch (err) {
-              console.error(err)
+            } catch (err: unknown) {
+              const errMsg = err instanceof Error ? err.message : 'Error verifying payment signature.'
               setNotification({
                 type: 'error',
-                message: 'Error verifying payment signature.',
+                message: errMsg,
               })
             } finally {
               setPurchasingId(null)
@@ -185,12 +209,19 @@ export default function Presets() {
           },
         }
 
-        const rzp = new (window as any).Razorpay(options)
-        rzp.open()
+        const win = window as unknown as {
+          Razorpay?: new (options: Record<string, unknown>) => { open: () => void }
+        }
+        if (win.Razorpay) {
+          const rzp = new win.Razorpay(options as Record<string, unknown>)
+          rzp.open()
+        } else {
+          alert('Razorpay failed to load.')
+        }
       } else {
         alert(data.error || 'Razorpay order creation failed.')
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err)
       alert('Network error initiating purchase.')
     } finally {
@@ -434,7 +465,6 @@ export default function Presets() {
           {filteredPresets.map((preset) => {
             const Icon = preset.icon
             const isLocked = isPremiumLocked(preset.id)
-            const isOwned = purchases.includes(preset.id)
             const isPremium = preset.type === 'premium'
 
             return (
@@ -587,7 +617,7 @@ export default function Presets() {
 
 // Parse CSS declarations into React inline styles
 function parseCssStringToStyles(cssString: string): React.CSSProperties {
-  const styles: any = {}
+  const styles: Record<string, string> = {}
   cssString.split('\n').forEach((line) => {
     const cleanLine = line.trim()
     if (!cleanLine || cleanLine.startsWith('/*')) return
@@ -605,10 +635,10 @@ function parseCssStringToStyles(cssString: string): React.CSSProperties {
     else if (property === 'border-radius') styles.borderRadius = value
     else if (property === 'background-image') styles.backgroundImage = value
   })
-  return styles
+  return styles as React.CSSProperties
 }
 
-function renderMicroPreview(presetId: string, Icon: any) {
+function renderMicroPreview(presetId: string, Icon: React.ComponentType<{ className?: string }>) {
   switch (presetId) {
     case 'credit-card':
       return (

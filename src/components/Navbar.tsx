@@ -6,9 +6,10 @@ import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase-client'
 import { Layers, User, LogOut, Sparkles, Menu, X, BookOpen, LayoutGrid, Paintbrush } from 'lucide-react'
 import AuthModal from './AuthModal'
+import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 export default function Navbar() {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<SupabaseUser | null>(null)
   const [loadingUser, setLoadingUser] = useState(true)
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -26,20 +27,31 @@ export default function Navbar() {
   }
 
   useEffect(() => {
-    fetchUser()
+    let active = true
+    const initUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (active) {
+        setUser(session?.user || null)
+        setLoadingUser(false)
+      }
+    }
+    initUser()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user || null)
-      setLoadingUser(false)
-      if (event === 'PASSWORD_RECOVERY') {
-        window.location.href = '/auth/reset-password'
+      if (active) {
+        setUser(session?.user || null)
+        setLoadingUser(false)
+        if (event === 'PASSWORD_RECOVERY') {
+          window.location.href = '/auth/reset-password'
+        }
       }
     })
 
     return () => {
+      active = false
       subscription.unsubscribe()
     }
-  }, [])
+  }, [supabase])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()

@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       .eq('user_id', user.id)
       .eq('status', 'completed')
 
-    const purchasedIds = userPurchases ? userPurchases.map((p: any) => p.product_id) : []
+    const purchasedIds = userPurchases ? userPurchases.map((p: { product_id: string }) => p.product_id) : []
 
     let owned = false
     let errorMsg = 'Product already owned.'

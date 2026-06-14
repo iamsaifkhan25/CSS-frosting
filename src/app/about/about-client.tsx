@@ -49,10 +49,11 @@ export default function AboutClient() {
         message: data.message || 'Feedback submitted successfully! It has been routed to your inbox.',
       })
       setFormData({ name: '', email: '', message: '' })
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.'
       setSubmitStatus({
         type: 'error',
-        message: err.message || 'An unexpected error occurred. Please try again.',
+        message: errMsg,
       })
     } finally {
       setIsSubmitting(false)
@@ -81,7 +82,7 @@ export default function AboutClient() {
             About <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">CSS Frosting</span>
           </h2>
           <p className="text-sm md:text-base text-white/55 leading-relaxed">
-            Developing premium visual interfaces shouldn't require manual CSS calculations. We build clean, high-conversion visual editors to put design control back in your hands.
+            Developing premium visual interfaces shouldn&apos;t require manual CSS calculations. We build clean, high-conversion visual editors to put design control back in your hands.
           </p>
         </div>
 

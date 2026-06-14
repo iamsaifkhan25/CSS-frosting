@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Sparkles, Info, AlertTriangle, CheckCircle, Copy, Check, ChevronDown, ChevronUp } from 'lucide-react'
+import { Sparkles, Info, AlertTriangle, Copy, Check, ChevronDown, ChevronUp } from 'lucide-react'
 import Footer from '@/components/Footer'
 
 export default function Docs() {

@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowUpRight, Sparkles, BookOpen, Layers, Lock, ShieldCheck, Cpu, Download } from 'lucide-react'
+import { ArrowUpRight, Sparkles, BookOpen, Layers, ShieldCheck, Cpu } from 'lucide-react'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 

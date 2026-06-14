@@ -4,10 +4,12 @@ import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase-client'
 import AuthModal from '@/components/AuthModal'
 import { 
-  Copy, Check, User, LogOut, Lock as LockIcon, Sparkles, 
-  CreditCard, Smartphone, LayoutGrid, Info, CheckCircle, 
-  RefreshCw, Layers, ShieldCheck, ChevronRight, Shuffle, Maximize2, Minimize2, Move
+  Copy, Check, Lock as LockIcon, Sparkles, 
+  CreditCard, Smartphone, LayoutGrid, CheckCircle, 
+  RefreshCw, Shuffle
 } from 'lucide-react'
+import type { User as SupabaseUser } from '@supabase/supabase-js'
+import { useCallback } from 'react'
 
 // Color conversions
 function hexToRgb(hex: string) {
@@ -97,7 +99,7 @@ function InlineColorPicker({ color, onChange }: { color: string; onChange: (hex:
   const [isTrackingSV, setIsTrackingSV] = useState(false);
   const [isTrackingHue, setIsTrackingHue] = useState(false);
 
-  const handleSVMove = (clientX: number, clientY: number) => {
+  const handleSVMove = useCallback((clientX: number, clientY: number) => {
     if (!svRef.current) return;
     const rect = svRef.current.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
@@ -105,15 +107,15 @@ function InlineColorPicker({ color, onChange }: { color: string; onChange: (hex:
     const newS = Math.round(x * 100);
     const newV = Math.round((1 - y) * 100);
     onChange(hsvToHex(h, newS, newV));
-  };
+  }, [h, onChange]);
 
-  const handleHueMove = (clientX: number) => {
+  const handleHueMove = useCallback((clientX: number) => {
     if (!hueRef.current) return;
     const rect = hueRef.current.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
     const newH = Math.round(x * 360);
     onChange(hsvToHex(newH, s, v));
-  };
+  }, [s, v, onChange]);
 
   useEffect(() => {
     const handleGlobalMouseMove = (e: MouseEvent) => {
@@ -132,7 +134,7 @@ function InlineColorPicker({ color, onChange }: { color: string; onChange: (hex:
     return () => {
       window.removeEventListener('mousemove', handleGlobalMouseMove);
     };
-  }, [isTrackingSV, isTrackingHue, h, s, v]);
+  }, [isTrackingSV, isTrackingHue, handleSVMove, handleHueMove]);
 
   const handleSVClick = (e: React.PointerEvent) => {
     if (isTrackingSV) {
@@ -211,10 +213,9 @@ function InlineColorPicker({ color, onChange }: { color: string; onChange: (hex:
 
 export default function Generator() {
   // Supabase Auth & Purchase state
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<SupabaseUser | null>(null)
   const [purchases, setPurchases] = useState<string[]>([])
   const [authModalOpen, setAuthModalOpen] = useState(false)
-  const [loadingUser, setLoadingUser] = useState(true)
   const [purchasingId, setPurchasingId] = useState<string | null>(null)
 
   // Canvas background selections
@@ -261,7 +262,6 @@ export default function Generator() {
 
   // Load user details & purchases
   const fetchUserAndPurchases = async () => {
-    setLoadingUser(true)
     const { data: { session } } = await supabase.auth.getSession()
     if (session?.user) {
       setUser(session.user)
@@ -272,17 +272,36 @@ export default function Generator() {
         .eq('status', 'completed')
       
       if (!error && userPurchases) {
-        setPurchases(userPurchases.map((p: any) => p.product_id))
+        setPurchases(userPurchases.map((p: { product_id: string }) => p.product_id))
       }
     } else {
       setUser(null)
       setPurchases([])
     }
-    setLoadingUser(false)
   }
 
   useEffect(() => {
-    fetchUserAndPurchases()
+    let active = true
+    const init = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (active) {
+        if (session?.user) {
+          setUser(session.user)
+          const { data: userPurchases, error } = await supabase
+            .from('purchases')
+            .select('product_id')
+            .eq('user_id', session.user.id)
+            .eq('status', 'completed')
+          if (!error && userPurchases) {
+            setPurchases(userPurchases.map((p: { product_id: string }) => p.product_id))
+          }
+        } else {
+          setUser(null)
+          setPurchases([])
+        }
+      }
+    }
+    init()
 
     // Load Razorpay Script
     const script = document.createElement('script')
@@ -301,13 +320,12 @@ export default function Generator() {
             .eq('user_id', session.user.id)
             .eq('status', 'completed')
           if (userPurchases) {
-            setPurchases(userPurchases.map((p: any) => p.product_id))
+            setPurchases(userPurchases.map((p: { product_id: string }) => p.product_id))
           }
         } else {
           setUser(null)
           setPurchases([])
         }
-        setLoadingUser(false)
       }
     )
 
@@ -320,28 +338,33 @@ export default function Generator() {
 
     const checkoutStatus = query.get('checkout')
     if (checkoutStatus === 'success') {
-      setNotification({
-        type: 'success',
-        message: `Payment successful! Premium template has been permanently unlocked.`,
-      })
+      setTimeout(() => {
+        setNotification({
+          type: 'success',
+          message: `Payment successful! Premium template has been permanently unlocked.`,
+        })
+      }, 0)
       const newUrl = window.location.pathname
       window.history.replaceState({}, document.title, newUrl)
     } else if (checkoutStatus === 'cancel') {
-      setNotification({
-        type: 'error',
-        message: 'Payment cancelled. Try again whenever you are ready!',
-      })
+      setTimeout(() => {
+        setNotification({
+          type: 'error',
+          message: 'Payment cancelled. Try again whenever you are ready!',
+        })
+      }, 0)
       const newUrl = window.location.pathname
       window.history.replaceState({}, document.title, newUrl)
     }
 
     return () => {
+      active = false
       subscription.unsubscribe()
       if (document.body.contains(script)) {
         document.body.removeChild(script)
       }
     }
-  }, [])
+  }, [supabase])
 
   // Fetch premium CSS when purchased product is selected
   useEffect(() => {
@@ -368,14 +391,7 @@ export default function Generator() {
     }
   }, [selectedComp, purchases, user])
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    setUser(null)
-    setPurchases([])
-    if (selectedComp.startsWith('glass-premium-')) {
-      setSelectedComp('credit-card')
-    }
-  }
+
 
   // Generate styles based on input sliders
   const rgb = hexToRgb(tintColor)
@@ -443,7 +459,11 @@ border-radius: ${borderRadius}px;`
           name: 'CSS Frosting Store',
           description: 'Unlock Premium Layout',
           order_id: data.orderId,
-          handler: async function (response: any) {
+          handler: async function (response: {
+            razorpay_order_id: string
+            razorpay_payment_id: string
+            razorpay_signature: string
+          }) {
             setPurchasingId(productId)
             try {
               const verifyRes = await fetch('/api/verify', {
@@ -487,12 +507,19 @@ border-radius: ${borderRadius}px;`
           },
         }
 
-        const rzp = new (window as any).Razorpay(options)
-        rzp.open()
+        const win = window as unknown as {
+          Razorpay?: new (options: Record<string, unknown>) => { open: () => void }
+        }
+        if (win.Razorpay) {
+          const rzp = new win.Razorpay(options as Record<string, unknown>)
+          rzp.open()
+        } else {
+          alert('Razorpay failed to load.')
+        }
       } else {
         alert(data.error || 'Razorpay order creation failed.')
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(err)
       alert('Network error initiating purchase.')
     } finally {
@@ -507,7 +534,7 @@ border-radius: ${borderRadius}px;`
 
   // Parse CSS declarations into React inline styles
   function parseCssStringToStyles(cssString: string): React.CSSProperties {
-    const styles: any = {}
+    const styles: Record<string, string> = {}
     cssString.split('\n').forEach((line) => {
       const cleanLine = line.trim()
       if (!cleanLine || cleanLine.startsWith('/*')) return
@@ -524,7 +551,7 @@ border-radius: ${borderRadius}px;`
       else if (property === 'border-radius') styles.borderRadius = value
       else if (property === 'background-image') styles.backgroundImage = value
     })
-    return styles
+    return styles as React.CSSProperties
   }
 
   // Convert custom CSS into Tailwind classes

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
-import { Paintbrush, LayoutGrid, Sparkles, Code, Zap, ChevronRight, BookOpen, Layers } from 'lucide-react'
+import { Paintbrush, LayoutGrid, Sparkles, Code } from 'lucide-react'
 import Footer from '@/components/Footer'
 
 export default function HomeClient() {
@@ -66,7 +66,7 @@ export default function HomeClient() {
           </h2>
 
           <p className="text-sm md:text-base text-white/55 leading-relaxed max-w-xl">
-            Designing translucent, frosted-glass components shouldn't require guess work. Adjust parameters in real-time, inspect layouts, and export CSS or Tailwind codes instantly.
+            Designing translucent, frosted-glass components shouldn&apos;t require guess work. Adjust parameters in real-time, inspect layouts, and export CSS or Tailwind codes instantly.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">

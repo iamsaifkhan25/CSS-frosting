@@ -50,10 +50,11 @@ export default function ContactClient() {
         message: data.message || 'Message sent successfully! It has been forwarded to your inbox.',
       })
       setFormData({ name: '', email: '', message: '' })
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.'
       setSubmitStatus({
         type: 'error',
-        message: err.message || 'An unexpected error occurred. Please try again.',
+        message: errMsg,
       })
     } finally {
       setIsSubmitting(false)

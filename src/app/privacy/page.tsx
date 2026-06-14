@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Shield, Lock, EyeOff, ServerCrash, ArrowLeft } from 'lucide-react'
+import { Lock, EyeOff, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 

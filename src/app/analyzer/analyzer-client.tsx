@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
 import AuthModal from '@/components/AuthModal'
 import { createClient } from '@/lib/supabase-client'
+import type { User as SupabaseUser } from '@supabase/supabase-js'
 import { 
   Sparkles, CheckCircle2, AlertCircle, HelpCircle, Copy, Check, 
-  Code, Sliders, ShieldCheck, Play, ArrowRight, RotateCw, Eye, Lock
+  Code, Sliders, ShieldCheck, ArrowRight, RotateCw, Eye, Lock
 } from 'lucide-react'
 
 // Examples of code to let the user try the analyzer easily
@@ -63,8 +64,12 @@ interface AnalysisResult {
   suggestions: string[];
 }
 
+// Countdown clock setup (Module-level constants)
+const LAUNCH_DATE = new Date('2026-06-14T00:00:00Z')
+const LOCK_DATE = new Date(LAUNCH_DATE.getTime() + 180 * 24 * 60 * 60 * 1000) // 180 days trial period
+
 export default function AnalyzerClient() {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<SupabaseUser | null>(null)
   const [purchases, setPurchases] = useState<string[]>([])
   const [loadingUser, setLoadingUser] = useState(true)
   const [purchasingId, setPurchasingId] = useState<string | null>(null)
@@ -77,9 +82,6 @@ export default function AnalyzerClient() {
   const [copied, setCopied] = useState(false)
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null)
 
-  // Countdown clock setup
-  const launchDate = new Date('2026-06-14T00:00:00Z')
-  const lockDate = new Date(launchDate.getTime() + 180 * 24 * 60 * 60 * 1000) // 180 days trial period
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [isFreePeriodActive, setIsFreePeriodActive] = useState(true)
 
@@ -88,7 +90,7 @@ export default function AnalyzerClient() {
   // Countdown timer hook
   useEffect(() => {
     const updateTimer = () => {
-      const diff = lockDate.getTime() - new Date().getTime()
+      const diff = LOCK_DATE.getTime() - new Date().getTime()
       if (diff <= 0) {
         setIsFreePeriodActive(false)
       } else {
@@ -118,7 +120,7 @@ export default function AnalyzerClient() {
         .eq('status', 'completed')
       
       if (!error && userPurchases) {
-        setPurchases(userPurchases.map((p: any) => p.product_id))
+        setPurchases(userPurchases.map((p: { product_id: string }) => p.product_id))
       }
     } else {
       setUser(null)
@@ -129,7 +131,30 @@ export default function AnalyzerClient() {
 
   // Load Razorpay Script and fetch User + Purchases
   useEffect(() => {
-    fetchUserAndPurchases()
+    let active = true
+    
+    const init = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (active) {
+        if (session?.user) {
+          setUser(session.user)
+          const { data: userPurchases, error } = await supabase
+            .from('purchases')
+            .select('product_id')
+            .eq('user_id', session.user.id)
+            .eq('status', 'completed')
+          
+          if (!error && userPurchases) {
+            setPurchases(userPurchases.map((p: { product_id: string }) => p.product_id))
+          }
+        } else {
+          setUser(null)
+          setPurchases([])
+        }
+        setLoadingUser(false)
+      }
+    }
+    init()
     
     const script = document.createElement('script')
     script.src = 'https://checkout.razorpay.com/v1/checkout.js'
@@ -146,28 +171,28 @@ export default function AnalyzerClient() {
             .eq('user_id', session.user.id)
             .eq('status', 'completed')
           if (userPurchases) {
-            setPurchases(userPurchases.map((p: any) => p.product_id))
+            setPurchases(userPurchases.map((p: { product_id: string }) => p.product_id))
           }
         } else {
           setUser(null)
           setPurchases([])
         }
-        setLoadingUser(false)
+        if (active) {
+          setLoadingUser(false)
+        }
       }
     )
 
     return () => {
+      active = false
       subscription.unsubscribe()
       if (document.body.contains(script)) {
         document.body.removeChild(script)
       }
     }
-  }, [])
+  }, [supabase])
 
-  // Real-time analysis trigger
-  useEffect(() => {
-    runAnalysis()
-  }, [code, inputMode])
+
 
   const handlePurchase = async (productId: string) => {
     if (!user) {
@@ -192,15 +217,19 @@ export default function AnalyzerClient() {
           name: 'CSS Frosting Store',
           description: productId === 'glass-analyzer' ? 'Unlock UI Verifier' : 'Unlock Ultimate Mega Bundle',
           order_id: data.orderId,
-          handler: async function (response: any) {
+          handler: async function (response: {
+            razorpay_order_id: string
+            razorpay_payment_id: string
+            razorpay_signature: string
+          }) {
             setPurchasingId(productId)
             try {
               const verifyRes = await fetch('/api/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  razorpay_payment_id: response.razorpay_payment_id,
                   razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
                   razorpay_signature: response.razorpay_signature,
                   productId,
                 }),
@@ -220,11 +249,11 @@ export default function AnalyzerClient() {
                   message: verifyData.error || 'Verification failed.',
                 })
               }
-            } catch (err) {
-              console.error(err)
+            } catch (err: unknown) {
+              const errMsg = err instanceof Error ? err.message : 'An error occurred during verification.'
               setNotification({
                 type: 'error',
-                message: 'Error verifying payment signature.',
+                message: errMsg
               })
             } finally {
               setPurchasingId(null)
@@ -238,8 +267,15 @@ export default function AnalyzerClient() {
           },
         }
 
-        const rzp = new (window as any).Razorpay(options)
-        rzp.open()
+        const win = window as unknown as {
+          Razorpay?: new (options: Record<string, unknown>) => { open: () => void }
+        }
+        if (win.Razorpay) {
+          const rzp = new win.Razorpay(options as Record<string, unknown>)
+          rzp.open()
+        } else {
+          alert('Razorpay failed to load.')
+        }
       } else {
         alert(data.error || 'Razorpay order creation failed.')
       }
@@ -270,7 +306,7 @@ export default function AnalyzerClient() {
 
   // Parse CSS declarations into React inline styles
   const parseCssStringToStyles = (cssString: string): React.CSSProperties => {
-    const styles: any = {}
+    const styles: Record<string, string> = {}
     cssString.split('\n').forEach((line) => {
       const cleanLine = line.trim()
       if (!cleanLine || cleanLine.startsWith('/*') || cleanLine.startsWith('//')) return
@@ -293,7 +329,7 @@ export default function AnalyzerClient() {
       else if (property === 'border-radius') styles.borderRadius = value
       else if (property === 'background-image') styles.backgroundImage = value
     })
-    return styles
+    return styles as React.CSSProperties
   }
 
   // Parse Styled-Components style blocks
@@ -303,12 +339,12 @@ export default function AnalyzerClient() {
     return parseCssStringToStyles(match[1])
   }
 
-  const runAnalysis = () => {
+  const runAnalysis = useCallback(() => {
     let hasBackground = false
     let hasBlur = false
     let hasBorder = false
     let hasShadow = false
-    let suggestions: string[] = []
+    const suggestions: string[] = []
 
     const cleanCode = code.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '').toLowerCase()
 
@@ -495,20 +531,27 @@ export default function AnalyzerClient() {
     else if (score >= 40) rating = 'partial'
     else rating = 'none'
 
-    setAnalysis({
-      score,
-      rating,
-      hasBackground,
-      backgroundScore: bgScore,
-      hasBlur,
-      blurScore: blurScore,
-      hasBorder,
-      borderScore: borderScore,
-      hasShadow,
-      shadowScore: shadowScore,
-      suggestions
-    })
-  }
+    setTimeout(() => {
+      setAnalysis({
+        score,
+        rating,
+        hasBackground,
+        backgroundScore: bgScore,
+        hasBlur,
+        blurScore: blurScore,
+        hasBorder,
+        borderScore: borderScore,
+        hasShadow,
+        shadowScore: shadowScore,
+        suggestions
+      })
+    }, 0)
+  }, [code, inputMode])
+
+  // Real-time analysis trigger
+  useEffect(() => {
+    runAnalysis()
+  }, [runAnalysis])
 
   const getPreviewStyle = (): React.CSSProperties => {
     if (inputMode === 'css') {

@@ -55,8 +55,9 @@ export async function GET(req: Request) {
       name: product.name,
       css: product.premium_css_string,
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[PREMIUM_API_ERROR]:', error)
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })
+    const errMsg = error instanceof Error ? error.message : 'Internal Server Error'
+    return NextResponse.json({ error: errMsg }, { status: 500 })
   }
 }
