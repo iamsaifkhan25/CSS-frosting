@@ -111,6 +111,38 @@ export default function ProjectsClient() {
             </div>
           </div>
 
+          {/* GLOWING BAR: LAUNCHING SOON */}
+          <div className="relative overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_20px_50px_rgba(0,0,0,0.4)] transition-all duration-500 group">
+            {/* Glowing background blur effect behind the bar */}
+            <div className="absolute -inset-px bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-cyan-500/10 rounded-3xl opacity-0 group-hover:opacity-100 blur-lg transition duration-700 pointer-events-none"></div>
+            
+            {/* Left gradient accent bar */}
+            <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-gradient-to-b from-purple-500 via-pink-500 to-cyan-500"></div>
+
+            <div className="relative z-10 flex flex-col space-y-2 text-left max-w-2xl md:ml-4">
+              <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+                <Sparkles className="w-4 h-4 text-purple-400 animate-pulse" />
+                <span>Ecosystem Hub & Connected Utilities</span>
+              </h3>
+              <p className="text-xs text-white/55 leading-relaxed">
+                We are developing serverless, privacy-first web modules that run directly in your browser. These connected developer utilities will be accessible soon.
+              </p>
+            </div>
+
+            {/* Glowing Pill Bar Badge */}
+            <div className="relative z-10 shrink-0">
+              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-cyan-500/10 border border-cyan-500/20 rounded-full px-5 py-2.5 text-xs font-semibold tracking-wider uppercase font-mono shadow-[0_0_15px_rgba(6,182,212,0.15)] animate-pulse-border">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75 animate-ping-ring"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
+                </span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-300 via-pink-300 to-cyan-300 font-bold">
+                  More Launching Soon
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* PROJECT CARD: CSS FROSTING (Context wrapper) */}
           <div className="bg-white/5 border border-white/15 rounded-3xl p-6 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 opacity-75">
             <div className="space-y-2 max-w-2xl">

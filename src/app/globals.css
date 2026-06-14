@@ -29,3 +29,35 @@ body {
   animation-delay: 2s;
 }
 
+/* Custom Launching Soon Animations */
+.animate-pulse-border {
+  animation: pulse-border 2.5s infinite ease-in-out;
+}
+
+.animate-ping-ring {
+  animation: pulse-ring 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: rgba(6, 182, 212, 0.25);
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.1);
+  }
+  50% {
+    border-color: rgba(236, 72, 153, 0.45);
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+  }
+}
+
+
